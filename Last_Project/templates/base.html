@@ -1,0 +1,144 @@
+{% extends "index.html"%}
+{%block products%}
+<!-- PRODUCTS -->
+  <div class="container-fluid products-bg">
+    <div class="container">
+      <div class="wrap">
+        <div class="wrap-block">
+          <div class="items text-center">
+            {% for items in list_of_products %}
+            <a href="products/{{items['id']}}">
+
+              <div class="item">
+                <img src="../static/img/products-img/{{items['src_of_img']}}" alt="">
+                <h1>{{items['name_of_product']}}</h1>
+                <span>{{items['price_product']}}руб.</span>
+              </div>
+
+            </a>
+            {% endfor %}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- CLOSE PRODUCTS -->
+{% endblock %}
+
+{% block header %}
+<!-- HEADER -->
+  <div class="container-fluid">
+    <div class="container">
+      <div class="inner_header">
+        <div class="wrap">
+          <div class="wrap-block">
+            <div class="first_logo_div col-md-4">
+              <img src="../static/../static/img/mian_logo_img.png" alt="" class='img-of-logo'>
+              <h1 class='logo_name'>street 23</h1>
+            </div>
+
+            <div class="second_logo_div col-md-4">
+              <div class="finder_container">
+                <input type="text">
+                <img src="../static/../static/img/finder_logo.png" alt="" class='img_of_search'>
+              </div>
+            </div>
+            <div class="thirth_logo_div">
+              <div class="personal_accaunt">
+                <a href="" class="profile_logo_link">
+                  <img src="../static/../static/img/profile_logo.png" alt="" class='profile_logo'>
+                </a>
+                <a href="" class="img_of_basket_link">
+                  <img src="../static/../static/img/basket_logo.png" alt="" class='img_of_basket'>
+                  <img src="../static/../static/img/product_frame.png" alt="" class='product_count'>
+                </a>
+                <a href="" class="amount_value_link">
+                  <span class='amount_value'>999$</span>
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+<!-- CLOSE HEADER -->
+
+<!-- NAV BAR -->
+  <div class="container-fluid nav_bar">
+    <div class="container nav_place">
+      <div class="wrap">
+        <div class="wrap-block">
+          <div class="text-center">
+            <a href="" class="link_of_nav_bar blog">Блог</a>
+            <a href="" class="link_of_nav_bar sales">Скидки</a>
+            <a href="" class="link_of_nav_bar male">Мужское</a>
+            <a href="" class="link_of_nav_bar female">Женское</a>
+            <a href="" class="link_of_nav_bar accessories">Акссесуары</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+<!-- CLOSE NAV BAR -->
+{% endblock %}
+
+{% block footer %}
+    <!-- HELP -->
+  <div class="container-fluid help">
+    <div class="wrapper">
+      <div class="wrapper-block">
+        <div class="container">
+          <div class="row">
+            <div class="col-md-1 col-sm-12 text-center">
+              <div class="wrapper">
+                <div class="wrapper-block"><img src="../static/img/message.png" alt=""></div>
+              </div>
+            </div>
+            <div class="col-md-6 col-sm-12">
+              <h3>ВАМ НУЖНА ПОМОЩЬ?<br><span>У вас есть какие- либо вопросы или вам нужна помощь с заказом? Дайте нам
+                  знать!</span></h3>
+            </div>
+            <div class="col-md-5 col-sm-12 text-center">
+              <div class="wrapper">
+                <div class="wrapper-block"><button>Сделать запрос</button></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- CLOSE HELP -->
+
+  <div class="container-fluid footer">
+    <div class="container">
+      <div class="wrap">
+        <div class="wrap-block">
+          <div class="row">
+            <div class="col-md-6 first">
+              <a href=""><div class="number">+79047698405</div></a>
+              <a href=""><div class="address time-of-work">
+                <span>Россия, республика татарстан, альметьевск</span>
+                <h4>мы работаем с 11:00 до 22:00</h4>
+              </div></a>
+
+              <div class="social">
+                <span>МЫ в соц сетях</span>
+                <a href=""><img src="" alt=""></a>
+                <a href=""><img src="" alt=""></a>
+
+              </div>
+            </div>
+            <div class="col-md-6 second">
+              <a href=""><div class="about-us">О нас</div></a>
+              <a href=""><div class="policy_and_privacy">Политека и конфидициальность</div></a>
+              <a href=""><div class="payment_and_delivery">Оплата и доставка</div></a>
+              <a href=""><div class="reviews">отзывы</div></a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock %}
