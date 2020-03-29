@@ -23,12 +23,29 @@
         </div>
         <div class="register">
             <img src="../static/img/mian_logo_img.png" alt="">
-          <form method='POST' action="#">
+          <form action="" method="post">
+            {{ form.hidden_tag() }}
+            {{ form.csrf_token }}
             <div class="register__Inputts">
-              <input type="email" name='Email' class='mail' required placeholder='Enter your Mail'>
-              <input type="text" name='Password' required class='password' placeholder='Enter your Password'>
+              <p>
+                  {{ form.email(class="form-control", type="email", placeholder='Enter your Mail') }}<br>
+                  {% for error in form.email.errors %}
+                    <p class="alert alert-danger" role="alert">
+                      {{ error }}
+                    </p>
+                  {% endfor %}
+              </p>
+              <p>
+                  {{ form.password(class="form-control", type="password", placeholder='Enter your Password') }}<br>
+                  {% for error in form.password.errors %}
+                    <p class="alert alert-danger" role="alert">
+                      {{ error }}
+                    </p>
+                  {% endfor %}
+              </p>
+              <p>{{ message }}</p>
               <button type="submit" name='submit' class="btn btn-default btn-lg">Login</button>
-              <a href="/user/register">Register</a>
+              <a href="/register">Register</a>
             </div>
           </form>
         </div>
