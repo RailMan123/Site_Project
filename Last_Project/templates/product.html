@@ -1,0 +1,32 @@
+{% extends "base.html"%}
+{% block content %}
+<div class="container gg">
+  <div class="content">
+    <div class="img-block"><img src="../static/img/products-img/{{product.src_of_img}}" alt=""></div>
+    <div class="order-block">
+      <h3 style='margin-bottom: 0; color: #808080;'>Originals</h3>
+      <div class="name"></div>
+      <div class="sex"></div>
+      <h3>Be careful: the tag does not have the size of RU, so not to get confused, check the size of UK.</h3>
+      <h5 style='margin-top: 20px;'>This product is only available in the online store</h5>
+      <form action="" method="post">
+        <div class="size">
+          {{ form.hidden_tag() }}
+          {{ form.example }}
+        </div>
+
+        <div class="price_of_item" style="margin-top: 30px; color: #ff4f00;">
+          <h1>{{product.price_product}} руб</h1>
+        </div>
+        <div class="button-to-order">
+          <button type="submit" class="btn btn-success" style=" background-color: #ff7373; ">Add to basket</button>
+        </div>
+    </div>
+    </form>
+    <div class="description">
+
+    </div>
+  </div>
+</div>
+
+{% endblock %}

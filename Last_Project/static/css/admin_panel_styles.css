@@ -1,0 +1,98 @@
+.section {
+  min-height: 100vh;
+}
+.section .container-fluid {
+  height: 100%;
+  padding: 0;
+}
+.section .container-fluid .slidebar {
+  padding: 20px;
+  z-index: 2;
+  box-shadow: 20px  5px 100px #808080;
+  position: relative;
+  background-color: #f8f8ff;
+  width: 22%;
+  float: left;
+  min-height: 100vh;
+  height: inherit;
+}
+.section .container-fluid .slidebar .logo {
+  margin-top: 50px;
+}
+.section .container-fluid .slidebar .logo img {
+  height: 100px;
+  width: 100px;
+  border-radius: 100%;
+}
+.section .container-fluid .slidebar .name {
+  margin-top: 60%;
+  padding: 0;
+  height: 50%;
+}
+.section .container-fluid .slidebar .name li {
+  margin-top: 20px;
+  width: 100%;
+  display: block;
+}
+.section .container-fluid .slidebar .name li h6 {
+  cursor: pointer;
+  font-weight: 450;
+  background-color: transparent;
+  border: none;
+  padding-left: 30px;
+}
+.section .container-fluid .content {
+  position: relative;
+  float: left;
+  width: 78%;
+  min-height: 100vh;
+  height: 100%;
+  background-color: #e3e8e6;
+}
+.section .container-fluid .content .content_add .name_of_function,
+.section .container-fluid .content .content_change .name_of_function,
+.section .container-fluid .content .content_delete .name_of_function {
+  margin-left: 50px;
+  margin-top: 30px;
+  font-size: 30px;
+}
+.section .container-fluid .content .content_add .add,
+.section .container-fluid .content .content_change .add,
+.section .container-fluid .content .content_delete .add {
+  margin-top: 50px;
+}
+.section .container-fluid .content .content_add .add h4,
+.section .container-fluid .content .content_change .add h4,
+.section .container-fluid .content .content_delete .add h4 {
+  font-size: 22px;
+  display: inline-block;
+  width: 20%;
+}
+.section .container-fluid .content .content_add .add input,
+.section .container-fluid .content .content_change .add input,
+.section .container-fluid .content .content_delete .add input {
+  margin-top: 20px;
+  width: 60%;
+  height: 50px;
+  display: inline-block;
+}
+.section .container-fluid .content .content_add .add textarea,
+.section .container-fluid .content .content_change .add textarea,
+.section .container-fluid .content .content_delete .add textarea {
+  margin-top: 20px;
+  width: 60%;
+  height: 80px;
+  display: inline-block;
+}
+.section .container-fluid .content .content_add .add .btn_p,
+.section .container-fluid .content .content_change .add .btn_p,
+.section .container-fluid .content .content_delete .add .btn_p {
+  padding-bottom: 50px;
+}
+.section .container-fluid .content .content_add .add .btn,
+.section .container-fluid .content .content_change .add .btn,
+.section .container-fluid .content .content_delete .add .btn {
+  margin-top: 50px;
+  width: 60%;
+  display: inline-block;
+}

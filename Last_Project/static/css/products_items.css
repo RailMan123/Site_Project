@@ -1,0 +1,64 @@
+.gg {
+  margin-top: 50px;
+}
+.gg .content .img-block {
+  display: inline-block;
+  width: 55%;
+  margin-right: 5%;
+}
+.gg .content .img-block img {
+  width: 100%;
+  border-radius: 10px;
+}
+.gg .content .order-block {
+  vertical-align: top;
+  width: 39%;
+  float: right;
+  display: inline-block;
+}
+
+.gg .content .order-block .name {
+  font-size: 36px;
+}
+.gg .content .order-block .sex {
+  margin-top: 20px;
+  font-size: 24px;
+}
+.gg .content .order-block .size {
+  margin-top: 50px;
+}
+.gg .content .order-block .size .size-gg {
+  text-align: center;
+  margin-right: 4px;
+  border: 1px solid #ff7373;
+  width: 50px;
+  font-size: 14px;
+  display: inline-block;
+}
+.gg .content .order-block .size .size-gg button {
+  width: 100%;
+  border: none;
+  background-color: transparent;
+}
+.gg .content .order-block .size .tutu {
+  margin-right: 0px;
+}
+.gg .content .order-block .button-to-order {
+  vertical-align: bottom;
+  margin-top: 50px;
+}
+.gg .content .order-block .button-to-order button {
+  border-color: transparent;
+  width: 48%;
+  height: 40px;
+  font-size: 18px;
+}
+.gg .content .order-block .button-to-order .kk {
+  float: right;
+}
+.gg .content .description {
+  font-size: 24px;
+}
+li {
+  display: inline-block;
+}
