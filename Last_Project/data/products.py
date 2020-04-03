@@ -14,5 +14,8 @@ class Products(SqlAlchemyBase, SerializerMixin):
     about_product = sqlalchemy.Column(sqlalchemy.String, index=True)
     price_product = sqlalchemy.Column(sqlalchemy.String, index=True)
     sex_category = sqlalchemy.Column(sqlalchemy.String, index=True)
+    available_sizes = sqlalchemy.Column(sqlalchemy.String, index=True)
+    discount = sqlalchemy.Column(sqlalchemy.String, index=True)
+    brands = sqlalchemy.Column(sqlalchemy.String, index=True)
     modified_date = sqlalchemy.Column(sqlalchemy.DateTime,
                                       default=datetime.datetime.now)

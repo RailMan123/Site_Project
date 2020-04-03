@@ -66,7 +66,7 @@ body {
 }
 .inner_header .wrap .thirth_logo_div .personal_accaunt .profile_logo_link {
   height: 80px;
-  margin-right: 80px;
+  margin-right: 10px;
 }
 .inner_header .wrap .thirth_logo_div .personal_accaunt .product_count {
   height: 25px;
@@ -129,8 +129,17 @@ body {
   display: table-cell;
   vertical-align: middle;
 }
-.carousel-bg .wrap .wrap-block .carousel-inner .item img {
+.carousel-bg .wrap .wrap-block .carousel-inner {
+  height: 500px;
+}
+.carousel-bg .wrap .wrap-block .carousel-inner .carousel-item img {
   width: 45%;
+  display: inline-block;
+}
+.carousel-bg .wrap .wrap-block .carousel-inner .carousel-item .car {
+  width: 45%;
+  display: inline-block;
+  color: #fff;
 }
 .comapany_of_sell {
   height: 150px;

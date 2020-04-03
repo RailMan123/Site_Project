@@ -7,7 +7,7 @@ from flask_login import LoginManager, login_user, current_user, logout_user, \
 from flask_wtf import FlaskForm
 from werkzeug.exceptions import abort
 from werkzeug.utils import redirect
-from wtforms import PasswordField, BooleanField, SubmitField, StringField
+from wtforms import PasswordField, BooleanField, SubmitField, StringField, RadioField
 from wtforms.fields.html5 import EmailField
 from wtforms.validators import DataRequired
 from flask import make_response
@@ -30,6 +30,13 @@ def load_user(user_id):
     return session.query(User).get(user_id)
 
 
+@app.route('/logout')
+@login_required
+def logout():
+    logout_user()
+    return redirect("/")
+
+
 @app.route("/")
 def main_page():
     connect = db_session.create_session()
@@ -40,18 +47,35 @@ def main_page():
             break
         list_of_products.append(items)
         count -= 1
-    print(list_of_products[0])
-    return render_template('base.html', list_of_products=list_of_products)
+    return render_template('index.html', list_of_products=list_of_products)
+
+
+class ProductForm(FlaskForm):
+    submit = SubmitField('Submit')
+    example = RadioField('Label',
+                         choices=[('38', '38'), ('39', '39'), ('40', '40'), ('41', '41'), ('42', '42'), ('43', '43'),
+                                  ('44', '44')])
 
 
 @app.route('/product/<int:value>', methods=["GET", "POST"])
 def show_product(value):
-    pass
+    connect = db_session.create_session()
+    product = connect.query(Products).filter(Products.id == value).first()
+    form = ProductForm()
+    if form.validate_on_submit() and current_user.is_authenticated:
+        print(form.example.data)
+        user = connect.query(User).filter(User.id == current_user.id).first()
+        user.basket = user.basket
+
+    elif form.validate_on_submit() and not current_user.is_authenticated:
+        return redirect('/login')
+    return render_template('product.html', product=product, form=form)
 
 
 @app.errorhandler(404)
 def not_found(error):
     return make_response(jsonify({'error': 'Not found - 404'}), 404)
+
 
 class RegisterForm(FlaskForm):
     email = EmailField('Login / email', validators=[DataRequired()])
@@ -59,6 +83,7 @@ class RegisterForm(FlaskForm):
     password_again = PasswordField('Repeat password', validators=[DataRequired()])
     name = StringField('Name', validators=[DataRequired()])
     submit = SubmitField('Submit')
+
 
 @app.route('/register', methods=['GET', 'POST'])
 def reqister():
@@ -83,11 +108,13 @@ def reqister():
         return redirect('/login')
     return render_template('register.html', title='Регистрация', form=form)
 
+
 class LoginForm(FlaskForm):
     email = EmailField('Почта', validators=[DataRequired()])
     password = PasswordField('Пароль', validators=[DataRequired()])
     remember_me = BooleanField('Запомнить меня')
     submit = SubmitField('Войти')
+
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
@@ -102,6 +129,8 @@ def login():
                                message="Неправильный логин или пароль",
                                form=form)
     return render_template('login.html', title='Авторизация', form=form)
+
+
 if __name__ == "__main__":
     db_session.global_init('db/main_data_base.db')
     app.run()

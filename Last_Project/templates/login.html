@@ -19,29 +19,29 @@
     <div class="container">
       <div class="register__form">
         <div class="img text-center">
-          
+
         </div>
         <div class="register">
-            <img src="../static/img/mian_logo_img.png" alt="">
+          <img src="../static/img/mian_logo_img.png" alt="">
           <form action="" method="post">
             {{ form.hidden_tag() }}
             {{ form.csrf_token }}
             <div class="register__Inputts">
               <p>
-                  {{ form.email(class="form-control", type="email", placeholder='Enter your Mail') }}<br>
-                  {% for error in form.email.errors %}
-                    <p class="alert alert-danger" role="alert">
-                      {{ error }}
-                    </p>
-                  {% endfor %}
+                {{ form.email(class="form-control", type="email", placeholder='Enter your Mail') }}<br>
+                {% for error in form.email.errors %}
+                <p class="alert alert-danger" role="alert">
+                  {{ error }}
+                </p>
+                {% endfor %}
               </p>
               <p>
-                  {{ form.password(class="form-control", type="password", placeholder='Enter your Password') }}<br>
-                  {% for error in form.password.errors %}
-                    <p class="alert alert-danger" role="alert">
-                      {{ error }}
-                    </p>
-                  {% endfor %}
+                {{ form.password(class="form-control", type="password", placeholder='Enter your Password') }}<br>
+                {% for error in form.password.errors %}
+                <p class="alert alert-danger" role="alert">
+                  {{ error }}
+                </p>
+                {% endfor %}
               </p>
               <p>{{ message }}</p>
               <button type="submit" name='submit' class="btn btn-default btn-lg">Login</button>

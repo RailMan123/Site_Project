@@ -1,32 +1,22 @@
-{% extends "index.html"%}
-{%block products%}
-<!-- PRODUCTS -->
-  <div class="container-fluid products-bg">
-    <div class="container">
-      <div class="wrap">
-        <div class="wrap-block">
-          <div class="items text-center">
-            {% for items in list_of_products %}
-            <a href="products/{{items['id']}}">
+<!DOCTYPE html>
+<html lang="en">
 
-              <div class="item">
-                <img src="../static/img/products-img/{{items['src_of_img']}}" alt="">
-                <h1>{{items['name_of_product']}}</h1>
-                <span>{{items['price_product']}}руб.</span>
-              </div>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <link rel="stylesheet" href="../static/css/index.css">
+  <link rel="stylesheet" href="../static/css/products.css">
+  <link rel="stylesheet" href="../static/css/products_items.css">
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+    integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+  <title>Street23</title>
+</head>
 
-            </a>
-            {% endfor %}
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-  <!-- CLOSE PRODUCTS -->
-{% endblock %}
+<body>
+  <!-- HEADER -->
 
-{% block header %}
-<!-- HEADER -->
+  <!-- HEADER -->
   <div class="container-fluid">
     <div class="container">
       <div class="inner_header">
@@ -45,15 +35,18 @@
             </div>
             <div class="thirth_logo_div">
               <div class="personal_accaunt">
-                <a href="" class="profile_logo_link">
+                <a href="/login" class="profile_logo_link">
                   <img src="../static/../static/img/profile_logo.png" alt="" class='profile_logo'>
                 </a>
+                {% if current_user.is_authenticated %}
+                <a class="navbar-brand" href="/logout" style="display:inline-block;">{{ current_user.name }}</a>
+                {% endif %}
                 <a href="" class="img_of_basket_link">
                   <img src="../static/../static/img/basket_logo.png" alt="" class='img_of_basket'>
                   <img src="../static/../static/img/product_frame.png" alt="" class='product_count'>
                 </a>
                 <a href="" class="amount_value_link">
-                  <span class='amount_value'>999$</span>
+                  <span class='amount_value'></span>
                 </a>
               </div>
             </div>
@@ -62,9 +55,9 @@
       </div>
     </div>
   </div>
-<!-- CLOSE HEADER -->
+  <!-- CLOSE HEADER -->
 
-<!-- NAV BAR -->
+  <!-- NAV BAR -->
   <div class="container-fluid nav_bar">
     <div class="container nav_place">
       <div class="wrap">
@@ -74,17 +67,22 @@
             <a href="" class="link_of_nav_bar sales">Скидки</a>
             <a href="" class="link_of_nav_bar male">Мужское</a>
             <a href="" class="link_of_nav_bar female">Женское</a>
-            <a href="" class="link_of_nav_bar accessories">Акссесуары</a>
+            <a href="" class="link_of_nav_bar accessories">Аксессуары</a>
           </div>
         </div>
       </div>
     </div>
   </div>
-<!-- CLOSE NAV BAR -->
-{% endblock %}
+  <!-- CLOSE NAV BAR -->
 
-{% block footer %}
-    <!-- HELP -->
+  <!-- CLOSE HEADER -->
+
+
+  {% block content %}
+  {%endblock%}
+
+
+  <!-- HELP -->
   <div class="container-fluid help">
     <div class="wrapper">
       <div class="wrapper-block">
@@ -96,7 +94,8 @@
               </div>
             </div>
             <div class="col-md-6 col-sm-12">
-              <h3>ВАМ НУЖНА ПОМОЩЬ?<br><span>У вас есть какие- либо вопросы или вам нужна помощь с заказом? Дайте нам
+              <h3>ВАМ НУЖНА ПОМОЩЬ?<br><span>У вас есть какие- либо вопросы или вам нужна помощь с
+                  заказом? Дайте нам
                   знать!</span></h3>
             </div>
             <div class="col-md-5 col-sm-12 text-center">
@@ -117,11 +116,15 @@
         <div class="wrap-block">
           <div class="row">
             <div class="col-md-6 first">
-              <a href=""><div class="number">+79047698405</div></a>
-              <a href=""><div class="address time-of-work">
-                <span>Россия, республика татарстан, альметьевск</span>
-                <h4>мы работаем с 11:00 до 22:00</h4>
-              </div></a>
+              <a href="">
+                <div class="number">+79047698405</div>
+              </a>
+              <a href="">
+                <div class="address time-of-work">
+                  <span>Россия, республика татарстан, альметьевск</span>
+                  <h4>мы работаем с 11:00 до 22:00</h4>
+                </div>
+              </a>
 
               <div class="social">
                 <span>МЫ в соц сетях</span>
@@ -131,14 +134,36 @@
               </div>
             </div>
             <div class="col-md-6 second">
-              <a href=""><div class="about-us">О нас</div></a>
-              <a href=""><div class="policy_and_privacy">Политека и конфидициальность</div></a>
-              <a href=""><div class="payment_and_delivery">Оплата и доставка</div></a>
-              <a href=""><div class="reviews">отзывы</div></a>
+              <a href="">
+                <div class="about-us">О нас</div>
+              </a>
+              <a href="">
+                <div class="policy_and_privacy">Политека и конфидициальность</div>
+              </a>
+              <a href="">
+                <div class="payment_and_delivery">Оплата и доставка</div>
+              </a>
+              <a href="">
+                <div class="reviews">отзывы</div>
+              </a>
             </div>
           </div>
         </div>
       </div>
     </div>
   </div>
-{% endblock %}
+
+
+  <!-- SCRIPTS -->
+  <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
+    integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous">
+  </script>
+  <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
+    integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous">
+  </script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"
+    integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous">
+  </script>
+</body>
+
+</html>

@@ -1,277 +1,137 @@
-<!DOCTYPE html>
-<html lang="en">
+{% extends "base.html" %}
+{% block content%}
+<!-- CAROUSEL -->
+<div class="container-fluid carousel-bg">
+  <div class="container">
+    <div class="wrap">
+      <div class="wrap-block">
+        <div id="carousel" class="carousel slide" data-ride="carousel">
+          <!-- Индикаторы -->
+          <ol class="carousel-indicators">
+            <li data-target="#carousel" data-slide-to="0" class="active"></li>
+            <li data-target="#carousel" data-slide-to="1"></li>
+            <li data-target="#carousel" data-slide-to="2"></li>
+          </ol>
+          <div class="carousel-inner">
+            <div class="carousel-item active">
+              <img class="img-fluid" style='width:45%;display: inline-block; max-height: 500px;'
+                src="../static/img/carousel-img/1-carousel-img.png" alt="...">
+              <div class="car" style="width: 45%;display: inline-block;color: #fff;height:inherit;font-size:16px">
+                Lorem Ipsum - это текст-"рыба", часто используемый в печати и вэб-дизайне. Lorem Ipsum является
+                стандартной "рыбой" для текстов на латинице с начала XVI века. В то время некий безымянный печатник
+                создал большую коллекцию размеров и форм шрифтов, используя Lorem Ipsum для распечатки образцов. Lorem
+                Ipsum не только успешно пережил без заметных изменений пять веков, но и перешагнул в электронный дизайн.
+                Его популяризации в новое время послужили публикация листов Letraset с образцами Lorem Ipsum в 60-х
+                годах и, в более недавнее время, программы электронной вёрстки типа Aldus PageMaker, в шаблонах которых
+                используется Lorem Ipsum.
+              </div>
+            </div>
+            <div class="carousel-item">
+              <img class="img-fluid" style='width:45%;display: inline-block; max-height: 500px;'
+                src="../static/img/carousel-img/2-carousel-img.png" alt="...">
+              <div class="car" style="width: 45%;display: inline-block;color: #fff;height:inherit;font-size:16px">
+                Lorem Ipsum - это текст-"рыба", часто используемый в печати и вэб-дизайне. Lorem Ipsum является
+                стандартной "рыбой" для текстов на латинице с начала XVI века. В то время некий безымянный печатник
+                создал большую коллекцию размеров и форм шрифтов, используя Lorem Ipsum для распечатки образцов. Lorem
+                Ipsum не только успешно пережил без заметных изменений пять веков, но и перешагнул в электронный дизайн.
+                Его популяризации в новое время послужили публикация листов Letraset с образцами Lorem Ipsum в 60-х
+                годах и, в более недавнее время, программы электронной вёрстки типа Aldus PageMaker, в шаблонах которых
+                используется Lorem Ipsum.
+              </div>
+            </div>
+            <div class="carousel-item">
+              <img class="img-fluid" style='width:45%;display: inline-block; max-height: 500px;'
+                src="../static/img/carousel-img/2-carousel-img.png" alt="...">
+              <div class="car" style="width: 45%;display: inline-block;color: #fff;height:inherit;font-size:16px">
+                Lorem Ipsum - это текст-"рыба", часто используемый в печати и вэб-дизайне. Lorem Ipsum является
+                стандартной "рыбой" для текстов на латинице с начала XVI века. В то время некий безымянный печатник
+                создал большую коллекцию размеров и форм шрифтов, используя Lorem Ipsum для распечатки образцов. Lorem
+                Ipsum не только успешно пережил без заметных изменений пять веков, но и перешагнул в электронный дизайн.
+                Его популяризации в новое время послужили публикация листов Letraset с образцами Lorem Ipsum в 60-х
+                годах и, в более недавнее время, программы электронной вёрстки типа Aldus PageMaker, в шаблонах которых
+                используется Lorem Ipsum.
+              </div>
+            </div>
+          </div>
+          <!-- Элементы управления -->
+          <a class="carousel-control-prev" href="#carousel" role="button" data-slide="prev">
+            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+            <span class="sr-only">Предыдущий</span>
+          </a>
+          <a class="carousel-control-next" href="#carousel" role="button" data-slide="next">
+            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+            <span class="sr-only">Следующий</span>
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- CLOSE CAROUSEL -->
 
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta http-equiv="X-UA-Compatible" content="ie=edge">
-  <link rel="stylesheet" href="../static/css/index.css">
-  <link rel="stylesheet" href="../static/css/products.css">
-  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
-    integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
-  <title>Street23</title>
-</head>
+<!-- BRANDS -->
+<div class="container-fluid comapany_of_sell">
+  <div class="container">
+    <div class="wrap">
+      <div class="wrap-block text-center">
+        <div class="jordan-logo brands-logo">
+          <a href=""><img src="../static/img/firms-logo/jordan_logo.png" alt=""></a>
+        </div>
+        <div class="adidas-logo brands-logo">
+          <a href=""><img src="../static/img/firms-logo/adidas_logo.png" alt=""></a>
+        </div>
+        <div class="nike-logo brands-logo">
+          <a href=""><img src="../static/img/firms-logo/nike_logo.png" alt=""></a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- CLOSE BRANDS -->
 
-<body>
-  <!-- HEADER -->
+<!-- RECENT RECEIPTS -->
+<div class="container-fluid recent_receipts">
+  <div class="container">
+    <div class="wrap">
+      <div class="wrap-block text-center">
+        <span class='text-center'>Свежие поступления</span>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- CLOSE RECENT RECEIPTS -->
 
-  {% block header %}
-  {% endblock %}
+<!-- PRODUCTS -->
+<div class="container-fluid products-bg">
+  <div class="container">
+    <div class="wrap">
+      <div class="wrap-block">
+        <div class="items text-center">
+          <div class="container-fluid products-bg">
+            <div class="container">
+              <div class="wrap">
+                <div class="wrap-block">
+                  <div class="items text-center">
+                    {% for items in list_of_products %}
+                    <a href="product/{{items['id']}}">
 
-  <!-- CLOSE HEADER -->
+                      <div class="item">
+                        <img src="../static/img/products-img/{{items['src_of_img']}}" alt="">
+                        <h1>{{items['name_of_product']}}</h1>
+                        <span>{{items['price_product']}}руб.</span>
+                      </div>
 
-  <!-- CAROUSEL -->
-  <div class="container-fluid carousel-bg">
-    <div class="container">
-      <div class="wrap">
-        <div class="wrap-block">
-          <div id="carousel-example-generic" class="carousel slide" data-ride="carousel">
-            <!-- Показатели -->
-            <ol class="carousel-indicators">
-              <li data-target="#carousel-example-generic" damta-slide-to="0" class="active"></li>
-              <li data-target="#carousel-example-generic" data-slide-to="1"></li>
-              <li data-target="#carousel-example-generic" data-slide-to="2"></li>
-            </ol>
-
-            <!-- Обертка для слайдов -->
-            <div class="carousel-inner" role="listbox">
-              <div class="item active">
-                <img src="../static/img/carousel-img/1-carousel-img.png" alt="...">
-                <div class="carousel-caption">
-                  <h1>Lorem ipsum</h1>
+                    </a>
+                    {% endfor %}
+                  </div>
                 </div>
               </div>
-              <!-- <div class="item">
-                <img src="img/carousel-img/2-carousel-img.png" alt="...">
-                <div class="carousel-caption">
-                  <h1>Lorem ipsum</h1>
-                </div>
-              </div> -->
-              ...
-            </div>
-
-            <!-- Элементы управления -->
-            <a class="left carousel-control" href="#carousel-example-generic" role="button" data-slide="prev">
-              <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
-              <span class="sr-only">Previous</span>
-            </a>
-            <a class="right carousel-control" href="#carousel-example-generic" role="button" data-slide="next">
-              <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
-              <span class="sr-only">Next</span>
-            </a>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-  <!-- CLOSE CAROUSEL -->
-
-  <!-- BRANDS -->
-  <div class="container-fluid comapany_of_sell">
-    <div class="container">
-      <div class="wrap">
-        <div class="wrap-block text-center">
-          <div class="jordan-logo brands-logo">
-            <a href=""><img src="../static/img/firms-logo/jordan_logo.png" alt=""></a>
-          </div>
-          <div class="adidas-logo brands-logo">
-            <a href=""><img src="../static/img/firms-logo/adidas_logo.png" alt=""></a>
-          </div>
-          <div class="nike-logo brands-logo">
-            <a href=""><img src="../static/img/firms-logo/nike_logo.png" alt=""></a>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-  <!-- CLOSE BRANDS -->
-
-  <!-- RECENT RECEIPTS -->
-  <div class="container-fluid recent_receipts">
-    <div class="container">
-      <div class="wrap">
-        <div class="wrap-block text-center">
-          <span class='text-center'>Свежие поступления</span>
-        </div>
-      </div>
-    </div>
-  </div>
-  <!-- CLOSE RECENT RECEIPTS -->
-
-  <!-- PRODUCTS -->
-  <div class="container-fluid products-bg">
-    <div class="container">
-      <div class="wrap">
-        <div class="wrap-block">
-          <div class="items text-center">
-            {%block products%}
-            {% endblock %}
-<!--            <a href="">-->
-
-<!--              <div class="item">-->
-<!--                <img src="../static/img/products-img/product1_photo.png" alt="">-->
-<!--                <h1>AIR JORDAN 6OG WHITE/INFRARED - BLACK</h1>-->
-<!--                <span>7990руб.</span>-->
-<!--              </div>-->
-
-<!--            </a>-->
-<!--            <a href="">-->
-
-<!--              <div class="item">-->
-<!--                <img src="../static/img/products-img/product1_photo.png" alt="">-->
-<!--                <h1>AIR JORDAN 6OG WHITE/INFRARED - BLACK</h1>-->
-<!--                <span>7990руб.</span>-->
-<!--              </div>-->
-
-<!--            </a>-->
-<!--            <a href="">-->
-
-<!--              <div class="item">-->
-<!--                <img src="../static/img/products-img/product1_photo.png" alt="">-->
-<!--                <h1>AIR JORDAN 6OG WHITE/INFRARED - BLACK</h1>-->
-<!--                <span>7990руб.</span>-->
-<!--              </div>-->
-
-<!--            </a>-->
-<!--            <a href="">-->
-
-<!--              <div class="item">-->
-<!--                <img src="../static/img/products-img/product1_photo.png" alt="">-->
-<!--                <h1>AIR JORDAN 6OG WHITE/INFRARED - BLACK</h1>-->
-<!--                <span>7990руб.</span>-->
-<!--              </div>-->
-
-<!--            </a>-->
-<!--            <a href="">-->
-
-<!--              <div class="item item-margin">-->
-<!--                <img src="../static/img/products-img/product1_photo.png" alt="">-->
-<!--                <h1>AIR JORDAN 6OG WHITE/INFRARED - BLACK</h1>-->
-<!--                <span>7990руб.</span>-->
-<!--              </div>-->
-
-<!--            </a>-->
-<!--            <a href="">-->
-
-<!--              <div class="item">-->
-<!--                <img src="../static/img/products-img/product1_photo.png" alt="">-->
-<!--                <h1>AIR JORDAN 6OG WHITE/INFRARED - BLACK</h1>-->
-<!--                <span>7990руб.</span>-->
-<!--              </div>-->
-
-<!--            </a>-->
-<!--            <a href="">-->
-
-<!--              <div class="item">-->
-<!--                <img src="../static/img/products-img/product1_photo.png" alt="">-->
-<!--                <h1>AIR JORDAN 6OG WHITE/INFRARED - BLACK</h1>-->
-<!--                <span>7990руб.</span>-->
-<!--              </div>-->
-
-<!--            </a>-->
-<!--            <a href="">-->
-
-<!--              <div class="item">-->
-<!--                <img src="../static/img/products-img/product1_photo.png" alt="">-->
-<!--                <h1>AIR JORDAN 6OG WHITE/INFRARED - BLACK</h1>-->
-<!--                <span>7990руб.</span>-->
-<!--              </div>-->
-
-<!--            </a>-->
-<!--            <a href="">-->
-
-<!--              <div class="item">-->
-<!--                <img src="../static/img/products-img/product1_photo.png" alt="">-->
-<!--                <h1>AIR JORDAN 6OG WHITE/INFRARED - BLACK</h1>-->
-<!--                <span>7990руб.</span>-->
-<!--              </div>-->
-
-<!--            </a>-->
-<!--            <a href="">-->
-
-<!--              <div class="item item-margin">-->
-<!--                <img src="../static/img/products-img/product1_photo.png" alt="">-->
-<!--                <h1>AIR JORDAN 6OG WHITE/INFRARED - BLACK</h1>-->
-<!--                <span>7990руб.</span>-->
-<!--              </div>-->
-
-<!--            </a>-->
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-  <!-- CLOSE PRODUCTS -->
-
-  <!-- HELP -->
-  <div class="container-fluid help">
-    <div class="wrapper">
-      <div class="wrapper-block">
-        <div class="container">
-          <div class="row">
-            <div class="col-md-1 col-sm-12 text-center">
-              <div class="wrapper">
-                <div class="wrapper-block"><img src="../static/img/message.png" alt=""></div>
-              </div>
-            </div>
-            <div class="col-md-6 col-sm-12">
-              <h3>ВАМ НУЖНА ПОМОЩЬ?<br><span>У вас есть какие- либо вопросы или вам нужна помощь с заказом? Дайте нам
-                  знать!</span></h3>
-            </div>
-            <div class="col-md-5 col-sm-12 text-center">
-              <div class="wrapper">
-                <div class="wrapper-block"><button>Сделать запрос</button></div>
-              </div>
             </div>
           </div>
         </div>
       </div>
     </div>
   </div>
-  <!-- CLOSE HELP -->
-
-  <div class="container-fluid footer">
-    <div class="container">
-      <div class="wrap">
-        <div class="wrap-block">
-          <div class="row">
-            <div class="col-md-6 first">
-              <a href=""><div class="number">+79047698405</div></a>
-              <a href=""><div class="address time-of-work">
-                <span>Россия, республика татарстан, альметьевск</span>
-                <h4>мы работаем с 11:00 до 22:00</h4>
-              </div></a>
-              
-              <div class="social">
-                <span>МЫ в соц сетях</span>
-                <a href=""><img src="" alt=""></a>
-                <a href=""><img src="" alt=""></a>
-                
-              </div>
-            </div>
-            <div class="col-md-6 second">
-              <a href=""><div class="about-us">О нас</div></a>
-              <a href=""><div class="policy_and_privacy">Политека и конфидициальность</div></a>
-              <a href=""><div class="payment_and_delivery">Оплата и доставка</div></a>
-              <a href=""><div class="reviews">отзывы</div></a>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-
-  <!-- SCRIPTS -->
-  <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
-    integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous">
-  </script>
-  <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
-    integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous">
-  </script>
-  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"
-    integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous">
-  </script>
-</body>
-
-</html>
+</div>
+<!-- CLOSE PRODUCTS -->
+{% endblock %}
