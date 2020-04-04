@@ -84,6 +84,10 @@ class RegisterForm(FlaskForm):
     name = StringField('Name', validators=[DataRequired()])
     submit = SubmitField('Submit')
 
+@app.route('/basket', methods=["GET", "POST"])
+def show_basket_of_user():
+    return render_template('basket_of_auth_user.html')
+
 
 @app.route('/register', methods=['GET', 'POST'])
 def reqister():

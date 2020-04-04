@@ -1,3 +1,42 @@
-<div class="bg_of_basket">
-  <div class="basket_div"></div>
+{% extends "base.html" %}
+{% block content %}
+  <div class="bg_of_basket container-fluid">
+  <div class="basket_div container">
+    <div class="div_of_goods">
+      <div class="wrap">
+        <div class="wrap-block">
+          <div class="img_div"><img src="../static/img/products-img/product1_photo.png" alt=""></div>
+          <div class="about_div">
+            <div class="name">
+              <h1>AIR JORDAN 6OG WHITE/INFRARED - BLACK</h1>
+            </div>
+            <div class="about"><span>Lorem ipsum</span></div>
+            <div class="size">
+              <h3>44</h3>
+            </div>
+            <div class="price"><h6>7990руб.</h6></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="div_of_goods">
+      <div class="wrap">
+        <div class="wrap-block">
+          <div class="img_div"><img src="../static/img/products-img/product1_photo.png" alt=""></div>
+          <div class="about_div">
+            <div class="name">
+              <h1>AIR JORDAN 6OG WHITE/INFRARED - BLACK</h1>
+            </div>
+            <div class="about"><span>Lorem ipsum</span></div>
+            <div class="size">
+              <h3>44</h3>
+            </div>
+            <div class="price"><h6>7990руб.</h6></div>
+            <a href="/basket_item_delete/1" class="btn btn-danger">Удалить из корзины</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
+{% endblock %}
