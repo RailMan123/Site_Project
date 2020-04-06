@@ -4,12 +4,15 @@
 .bg_of_basket .basket_div {
   padding: 50px 0;
 }
+.bg_of_basket .basket_div a {
+  color: #000;
+}
 .bg_of_basket .basket_div .div_of_goods {
   margin-bottom: 40px;
   background-color: #fff;
   border-radius: 20px;
   height: 300px;
-  width: 80%;
+  width: 100%;
 }
 .bg_of_basket .basket_div .div_of_goods .wrap {
   display: table;
@@ -27,7 +30,6 @@
 .bg_of_basket .basket_div .div_of_goods .img_div img {
   min-height: 280px;
   max-height: 280px;
-  display: inline-block;
 }
 .bg_of_basket .basket_div .div_of_goods .about_div {
   margin-left: 7%;
@@ -36,7 +38,10 @@
 }
 .bg_of_basket .basket_div .div_of_goods .about_div h1 {
   font-weight: 400;
-  font-size: 28px;
+  font-size: 26px;
+}
+.bg_of_basket .basket_div .div_of_goods .about_div span {
+  font-size: 20px;
 }
 .bg_of_basket .basket_div .div_of_goods .about_div h6 {
   font-size: 34px;

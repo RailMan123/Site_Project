@@ -4,6 +4,7 @@ import datetime
 from flask import Flask, render_template, request
 from flask_login import LoginManager, login_user, current_user, logout_user, \
     login_required
+from flask_restful import Api
 from flask_wtf import FlaskForm
 from werkzeug.exceptions import abort
 from werkzeug.utils import redirect
@@ -16,12 +17,16 @@ from data import db_session
 from data.products import Products
 from data.users import User
 
+from API_FILES.products_api import ProductsListResource
+
 app = Flask(__name__)
 app.config['PERMANENT_SESSION_LIFETIME'] = datetime.timedelta(days=365)
 app.config['SECRET_KEY'] = 'my_secret'
 
 login_manager = LoginManager()
 login_manager.init_app(app)
+
+api = Api(app)
 
 
 @login_manager.user_loader
@@ -62,11 +67,15 @@ def show_product(value):
     connect = db_session.create_session()
     product = connect.query(Products).filter(Products.id == value).first()
     form = ProductForm()
-    if form.validate_on_submit() and current_user.is_authenticated:
+    if form.validate_on_submit() and current_user.is_authenticated and form.example.data != None:
         print(form.example.data)
         user = connect.query(User).filter(User.id == current_user.id).first()
-        user.basket = user.basket
-
+        if user.basket == None:
+            user.basket = f"#{value}, {int(form.example.data)}"
+        elif f"{value}, {int(form.example.data)}" not in user.basket.split('#'):
+            user.basket = user.basket + f'#{value}, {int(form.example.data)}'
+        print(user.basket)
+        connect.commit()
     elif form.validate_on_submit() and not current_user.is_authenticated:
         return redirect('/login')
     return render_template('product.html', product=product, form=form)
@@ -84,9 +93,31 @@ class RegisterForm(FlaskForm):
     name = StringField('Name', validators=[DataRequired()])
     submit = SubmitField('Submit')
 
+
 @app.route('/basket', methods=["GET", "POST"])
 def show_basket_of_user():
-    return render_template('basket_of_auth_user.html')
+    if not current_user.is_authenticated:
+        return redirect('/login')
+    else:
+        connect = db_session.create_session()
+        user = connect.query(User).filter(User.id == current_user.id).first()
+        rip = user.basket
+        new_list_of_items = []
+        list_of_items = user.basket.split('#')
+        for i in range(len(list_of_items)):
+            if list_of_items[i] != '':
+                listt = list(map(int, list_of_items[i].split(', ')))
+                intermid = connect.query(Products).filter(Products.id == listt[0]).first()
+                if intermid is None:
+                    print(", ".join(map(str, listt)), type(", ".join(map(str, listt))))
+                    rip = rip.split("#" + ", ".join(map(str, listt)))
+                    rip = "".join(rip)
+                    continue
+                listt[0] = intermid
+                new_list_of_items.append(listt)
+        user.basket = rip
+        connect.commit()
+        return render_template('basket_of_auth_user.html', list_of_items=new_list_of_items)
 
 
 @app.route('/register', methods=['GET', 'POST'])
@@ -135,6 +166,20 @@ def login():
     return render_template('login.html', title='Авторизация', form=form)
 
 
+@app.route('/basket_item_delete/<int:value_id>/<int:value_size>', methods=["GET", "POST"])
+def delete_item_from_basket(value_id, value_size):
+    connect = db_session.create_session()
+    user = connect.query(User).filter(User.id == current_user.id).first()
+    rip = user.basket
+    intermid = ", ".join([str(value_id), str(value_size)])
+    rip = rip.split(f"#{intermid}")
+    rip = "".join(rip)
+    user.basket = rip
+    connect.commit()
+    return redirect('/basket')
+
+
 if __name__ == "__main__":
     db_session.global_init('db/main_data_base.db')
+    api.add_resource(ProductsListResource, '/')
     app.run()
