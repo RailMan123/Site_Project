@@ -54,6 +54,54 @@ def main_page():
         count -= 1
     return render_template('index.html', list_of_products=list_of_products)
 
+@app.route("/formales")
+def male_page():
+    connect = db_session.create_session()
+    count = 6
+    list_of_products = []
+    for items in connect.query(Products):
+        if count == 0:
+            break
+        try:
+            if items.sax_cat == 'male':
+                list_of_products.append(items)
+                count -= 1
+        except:
+            pass
+    return render_template('index.html', list_of_products=list_of_products)
+
+@app.route("/forfemales")
+def female_page():
+    connect = db_session.create_session()
+    count = 6
+    list_of_products = []
+    for items in connect.query(Products):
+        if count == 0:
+            break
+        try:
+            if items.sax_cat == 'female':
+                list_of_products.append(items)
+                count -= 1
+        except:
+            pass
+    return render_template('index.html', list_of_products=list_of_products)
+
+@app.route("/discounts")
+def discounts_page():
+    connect = db_session.create_session()
+    count = 6
+    list_of_products = []
+    for items in connect.query(Products):
+        if count == 0:
+            break
+        try:
+            if items.discount != None:
+                print(items.discount)
+                list_of_products.append(items)
+                count -= 1
+        except:
+            pass
+    return render_template('index.html', list_of_products=list_of_products)
 
 class ProductForm(FlaskForm):
     submit = SubmitField('Submit')
