@@ -8,8 +8,8 @@ from sqlalchemy_serializer import SerializerMixin
 from werkzeug.security import check_password_hash, generate_password_hash
 
 
-class User(SqlAlchemyBase, UserMixin, SerializerMixin):
-    __tablename__ = 'users'
+class Admin(SqlAlchemyBase, UserMixin, SerializerMixin):
+    __tablename__ = 'admins'
 
     id = sqlalchemy.Column(sqlalchemy.Integer,
                            primary_key=True, autoincrement=True)

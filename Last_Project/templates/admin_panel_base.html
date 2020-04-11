@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="../static/css/admin_panel_styles.css">
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+    integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+  <title>{{title}}</title>
+</head>
+
+<body>
+  <div class="section">
+    <div class="container-fluid">
+      <div class="row" style="margin: 0;">
+        <div class="main-nav-bar col-md-3">
+          <div class="admin-information text-center">
+            <a href="/"><img src="../static/img/mian_logo_img.png" alt="" class="img-of-logo"></a>
+            <span class="name">{{admin_name}}</span>
+            <span class="email">{{admin_email}}</span>
+          </div>
+          <div class="nav-bar">
+            <a href="/admin_add_product">Добавить новый продукт</a>
+            <a href="/admin_edit_product">Изменить существующий продукт</a>
+            <a href="/admin_delete_product">Удаление существующего продукта</a>
+            <a href="/admin_delete_user">Удаление пользователя</a>
+          </div>
+        </div>
+        <div class="content col-md-9" style="padding: 50px 100px;">
+          {% block content %}
+          {% endblock %}
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+
+</html>

@@ -1,0 +1,75 @@
+{%extends "admin_panel_base.html"%}
+{% block content %}
+<div class="message" style="display: block; background-color: red; color: #fff">{{message}}</div>
+<form method="post" enctype="multipart/form-data">
+  {{ form.hidden_tag() }}
+  {{ form.csrf_token }}
+
+  {{ form.id.label }}
+  {{ form.id(class="form-control")}}<br>
+  {% for error in form.name_of_product.errors %}
+  <p class="alert alert-danger" role="alert">
+    {{ error }}
+  </p>
+  {% endfor %}
+
+  {{ form.name_of_product.label }}
+  {{ form.name_of_product(class="form-control")}}<br>
+  {% for error in form.name_of_product.errors %}
+  <p class="alert alert-danger" role="alert">
+    {{ error }}
+  </p>
+  {% endfor %}
+
+  {{ form.about_product.label }}
+  {{ form.about_product(class="form-control")}}<br>
+  {% for error in form.about_product.errors %}
+  <p class="alert alert-danger" role="alert">
+    {{ error }}
+  </p>
+  {% endfor %}
+
+  {{ form.price_product.label }}
+  {{ form.price_product(class="form-control")}}<br>
+  {% for error in form.price_product.errors %}
+  <p class="alert alert-danger" role="alert">
+    {{ error }}
+  </p>
+  {% endfor %}
+
+  {{ form.sex_category.label }}
+  {{ form.sex_category(class="form-control")}}<br>
+  {% for error in form.sex_category.errors %}
+  <p class="alert alert-danger" role="alert">
+    {{ error }}
+  </p>
+  {% endfor %}
+
+  {{ form.available_sizes.label }}
+  {{ form.available_sizes(class="form-control")}}<br>
+  {% for error in form.available_sizes.errors %}
+  <p class="alert alert-danger" role="alert">
+    {{ error }}
+  </p>
+  {% endfor %}
+
+  {{ form.discount.label }}
+  {{ form.discount(class="form-control")}}<br>
+  {% for error in form.discount.errors %}
+  <p class="alert alert-danger" role="alert">
+    {{ error }}
+  </p>
+  {% endfor %}
+
+  {{ form.brands.label }}
+  {{ form.brands(class="form-control")}}<br>
+  {% for error in form.brands.errors %}
+  <p class="alert alert-danger" role="alert">
+    {{ error }}
+  </p>
+  {% endfor %}
+  <input type="file" class="form-control-file btn btn-info" id="photo" name="file">
+
+  {{ form.submit(class="btn btn-warning",style="margin-top: 20px")}}
+</form>
+{% endblock %}

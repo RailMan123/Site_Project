@@ -1,0 +1,12 @@
+{%extends "admin_panel_base.html"%}
+{% block content %}
+<div class="message" style="display: block; background-color: red; color: #fff">{{message}}</div>
+<form method="post" enctype="multipart/form-data">
+  {{ form.hidden_tag() }}
+  {{ form.csrf_token }}
+
+  {{ form.id.label }}
+  {{ form.id(class="form-control")}}<br>
+  {{ form.submit(class="btn btn-warning",style="margin-top: 20px")}}
+</form>
+{% endblock %}

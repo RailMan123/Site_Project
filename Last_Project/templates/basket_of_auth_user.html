@@ -5,7 +5,7 @@
     {% for items, size in list_of_items %}
     <a href="/product/{{items['id']}}" style="text-decoration: none;width: inherit;height: inherit;">
       <div class="div_of_goods">
-        <div class="img_div" style="padding-top: 10px;"><img src="../static/img/products-img/{{items['src_of_img']}}" alt=""></div>
+        <div class="img_div" style="padding-top: 10px;margin-left: 40px;"><img src="../static/img/products-img/{{items['src_of_img']}}" alt="" style="border-radius:10px"></div>
         <div class="about_div" style="position: absolute;">
           <div class="name" style="padding-top: 50px;">
             <h1>{{items['name_of_product']}}</h1>
