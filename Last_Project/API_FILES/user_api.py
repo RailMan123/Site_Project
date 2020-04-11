@@ -46,8 +46,15 @@ class UserResource(Resource):
         session.commit()
         return jsonify({'success': 'OK'})
 
-class AddUserResource(Resource):
-    pass
+
+class UserDeleteResource(Resource):
+    def post(self, user):
+        abort_if_product_not_found(user)
+        session = db_session.create_session()
+        user = session.query(User).get(user)
+        session.delete(user)
+        session.commit()
+        return jsonify({'success': 'OK'})
 
 
 class UsersListResource(Resource):

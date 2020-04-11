@@ -54,4 +54,5 @@
 }
 .products-bg .wrap .wrap-block .item:hover {
   background-color: rebeccapurple;
+  transition-duration: 0.5s;
 }

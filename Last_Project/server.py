@@ -1,5 +1,4 @@
 import os
-
 from flask import Flask, render_template, jsonify
 import datetime
 from flask import Flask, render_template, request
@@ -22,20 +21,17 @@ from API_FILES.products_api import ProductsListResource, ProductsResource
 from API_FILES.user_api import UserResource
 from API_FILES.admins_api import AdminsResource
 from data.admins import Admin
-
 from API_FILES.products_api import ProductsAddResource
-
 from API_FILES.products_api import ProductDeleteResource
+
+from API_FILES.user_api import UserDeleteResource
 
 app = Flask(__name__)
 app.config['PERMANENT_SESSION_LIFETIME'] = datetime.timedelta(days=365)
-app.config['SECRET_KEY'] = 'my_secret'
-
+app.config['SECRET_KEY'] = 'very_secret_key'
 login_manager = LoginManager()
 login_manager.init_app(app)
-
-# logging.basicConfig(level=logging.INFO)
-
+logging.basicConfig(level=logging.INFO)
 api = Api(app)
 SERVER = 'http://localhost:5000'
 
@@ -87,46 +83,12 @@ def main_page():
     return render_template('index.html', list_of_products=list_of_products)
 
 
-@app.route("/formales")
-def male_page():
-    connect = db_session.create_session()
-    count = 6
-    list_of_products = []
-    for items in connect.query(Products):
-        if count == 0:
-            break
-        try:
-            if items.sax_cat == 'male':
-                list_of_products.append(items)
-                count -= 1
-        except:
-            pass
-    return render_template('index.html', list_of_products=list_of_products)
-
-
-@app.route("/forfemales")
-def female_page():
-    connect = db_session.create_session()
-    count = 9
-    list_of_products = []
-    for items in connect.query(Products):
-        if count == 0:
-            break
-        try:
-            if items.sax_cat == 'female':
-                list_of_products.append(items)
-                count -= 1
-        except:
-            pass
-    return render_template('index.html', list_of_products=list_of_products)
-
-
 @app.route("/discounts")
 def discounts_page():
     connect = db_session.create_session()
     count = 9
     list_of_products = []
-    for items in connect.query(Products):
+    for items in connect.query(Products).all():
         if count == 0:
             break
         try:
@@ -138,54 +100,41 @@ def discounts_page():
             pass
     return render_template('index.html', list_of_products=list_of_products)
 
+
 @app.route("/formales")
 def male_page():
     connect = db_session.create_session()
-    count = 6
+    count = 9
     list_of_products = []
-    for items in connect.query(Products):
+    for items in connect.query(Products).all():
         if count == 0:
             break
         try:
-            if items.sax_cat == 'male':
+            if items.sax_cat == 'men':
                 list_of_products.append(items)
                 count -= 1
         except:
             pass
+    print(list_of_products)
     return render_template('index.html', list_of_products=list_of_products)
+
 
 @app.route("/forfemales")
 def female_page():
     connect = db_session.create_session()
-    count = 6
+    count = 9
     list_of_products = []
-    for items in connect.query(Products):
+    for items in connect.query(Products).all():
         if count == 0:
             break
         try:
-            if items.sax_cat == 'female':
+            if items.sax_cat == 'women':
                 list_of_products.append(items)
                 count -= 1
         except:
             pass
     return render_template('index.html', list_of_products=list_of_products)
 
-@app.route("/discounts")
-def discounts_page():
-    connect = db_session.create_session()
-    count = 6
-    list_of_products = []
-    for items in connect.query(Products):
-        if count == 0:
-            break
-        try:
-            if items.discount != None:
-                print(items.discount)
-                list_of_products.append(items)
-                count -= 1
-        except:
-            pass
-    return render_template('index.html', list_of_products=list_of_products)
 
 class ProductForm(FlaskForm):
     submit = SubmitField('Submit')
@@ -485,6 +434,31 @@ def admin_delete_product():
     return render_template('admin_delete_product.html', admin_name=admin['name'], admin_email=admin['email'],
                            title='AdminPanel', form=admin_form, message="")
 
+class AdminDeletUser(FlaskForm):
+    id = StringField('Введите id пользователя', validators=[DataRequired()])
+    submit = SubmitField('Удалить')
+
+@app.route('/admin_delete_user', methods=["GET", "POST"])
+@login_required
+def admin_delete_user():
+    admin = get(f'{SERVER}/get_one_admin/{current_user.id}').json()
+    if 'error' in admin:
+        return redirect('/login')
+    admin = admin['admin']
+    admin_form = AdminDeletProduct()
+    if admin_form.validate_on_submit():
+        if admin_form.id.data.isdigit():
+            id = int(admin_form.id.data)
+            response = post(f'{SERVER}/delete_user/{id}')
+            if response:
+                return render_template('admin_delete_user.html', admin_name=admin['name'],
+                                       admin_email=admin['email'],
+                                       title='AdminPanel', form=admin_form, message="Success")
+            return render_template('admin_delete_user.html', admin_name=admin['name'], admin_email=admin['email'],
+                                   title='AdminPanel', form=admin_form, message="Something went wrong")
+    return render_template('admin_delete_user.html', admin_name=admin['name'], admin_email=admin['email'],
+                           title='AdminPanel', form=admin_form, message="")
+
 
 if __name__ == "__main__":
     db_session.global_init('db/main_data_base.db')
@@ -494,6 +468,7 @@ if __name__ == "__main__":
     api.add_resource(AdminsResource, f'/get_one_admin/<int:admin>')
     api.add_resource(ProductsAddResource, f'/add_new_product')
     api.add_resource(ProductDeleteResource, f'/delete_product/<int:value>')
+    api.add_resource(UserDeleteResource, f'/delete_user/<int:value>')
     app.run()
 
 # {{ form_of_search.hidden_tag() }}

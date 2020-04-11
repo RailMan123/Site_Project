@@ -30,18 +30,18 @@
 
             <div class="second_logo_div col-md-4">
               <div class="finder_container">
-                <input type="text">
                 <img src="../static/../static/img/finder_logo.png" alt="" class='img_of_search'>
               </div>
             </div>
             <div class="thirth_logo_div">
+              {% if current_user.is_authenticated %}
+                <a class="navbar-brand" href="/logout" style="display:inline-block;">{{ current_user.name }}</a>
+              {% endif %}
               <div class="personal_accaunt">
                 <a href="/login" class="profile_logo_link">
                   <img src="../static/../static/img/profile_logo.png" alt="" class='profile_logo'>
                 </a>
-                {% if current_user.is_authenticated %}
-                <a class="navbar-brand" href="/logout" style="display:inline-block;">{{ current_user.name }}</a>
-                {% endif %}
+
                 <a href="/basket" class="img_of_basket_link">
                   <img src="../static/../static/img/basket_logo.png" alt="" class='img_of_basket'>
                   <img src="../static/../static/img/product_frame.png" alt="" class='product_count'>
@@ -64,11 +64,9 @@
       <div class="wrap">
         <div class="wrap-block">
           <div class="text-center">
-            <a href="" class="link_of_nav_bar blog">Блог</a>
-            <a href="" class="link_of_nav_bar sales">Скидки</a>
-            <a href="" class="link_of_nav_bar male">Мужское</a>
-            <a href="" class="link_of_nav_bar female">Женское</a>
-            <a href="" class="link_of_nav_bar accessories">Аксессуары</a>
+            <a href="/discount" class="link_of_nav_bar sales">Скидки</a>
+            <a href="/formales" class="link_of_nav_bar male">Мужское</a>
+            <a href="/forfemales" class="link_of_nav_bar female">Женское</a>
           </div>
         </div>
       </div>

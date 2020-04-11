@@ -1,6 +1,7 @@
 {%extends "admin_panel_base.html"%}
 {% block content %}
 <div class="message text-center" style="display: block; background-color: red; color: #fff">{{message}}</div>
+<h1>DELETE USER, do you need it...</h1>
 <form method="post" enctype="multipart/form-data">
   {{ form.hidden_tag() }}
   {{ form.csrf_token }}
