@@ -24,20 +24,28 @@
         <div class="wrap">
           <div class="wrap-block">
             <div class="first_logo_div col-md-4">
-              <img src="../static/../static/img/mian_logo_img.png" alt="" class='img-of-logo'>
-              <h1 class='logo_name'>street 23</h1>
+              <a href="/" style="height:100%;width:100%;text-decoration:none;">
+                <img src="../static/../static/img/mian_logo_img.png" alt="" class='img-of-logo'>
+                <h1 class='logo_name'>street 23</h1>
+              </a>
             </div>
 
             <div class="second_logo_div col-md-4">
               <div class="finder_container">
-                <img src="../static/../static/img/finder_logo.png" alt="" class='img_of_search'>
+                <form method="post">
+                  {{ form_of_search.hidden_tag() }}
+                  {{ form_of_search.csrf_token }}
+                  {{ form_of_search.search_item }}
+                  {{ form_of_search.submit_of_search(class="img_of_search")}}
+                </form>
               </div>
             </div>
             <div class="thirth_logo_div">
-              {% if current_user.is_authenticated %}
-                <a class="navbar-brand" href="/logout" style="display:inline-block;">{{ current_user.name }}</a>
-              {% endif %}
+
               <div class="personal_accaunt">
+                {% if current_user.is_authenticated %}
+                  <a class="navbar-brand" href="/logout" style="display:inline-block;">{{ current_user.name }}</a>
+                {% endif %}
                 <a href="/login" class="profile_logo_link">
                   <img src="../static/../static/img/profile_logo.png" alt="" class='profile_logo'>
                 </a>
@@ -64,7 +72,7 @@
       <div class="wrap">
         <div class="wrap-block">
           <div class="text-center">
-            <a href="/discount" class="link_of_nav_bar sales">Скидки</a>
+            <a href="/discounts" class="link_of_nav_bar sales">Скидки</a>
             <a href="/formales" class="link_of_nav_bar male">Мужское</a>
             <a href="/forfemales" class="link_of_nav_bar female">Женское</a>
           </div>
@@ -116,7 +124,7 @@
           <div class="row">
             <div class="col-md-6 first">
               <a href="">
-                <div class="number">+79047698405</div>
+                <div class="number">88005553535</div>
               </a>
               <a href="">
                 <div class="address time-of-work">
@@ -124,11 +132,10 @@
                   <h4>мы работаем с 11:00 до 22:00</h4>
                 </div>
               </a>
-
               <div class="social">
                 <span>МЫ в соц сетях</span>
-                <a href=""><img src="" alt=""></a>
-                <a href=""><img src="" alt=""></a>
+                <a href="https://www.instagram.com/"><img src="" alt=""></a>
+                <a href="https://vk.com"><img src="" alt=""></a>
 
               </div>
             </div>
@@ -138,12 +145,6 @@
               </a>
               <a href="">
                 <div class="policy_and_privacy">Политека и конфидициальность</div>
-              </a>
-              <a href="">
-                <div class="payment_and_delivery">Оплата и доставка</div>
-              </a>
-              <a href="">
-                <div class="reviews">отзывы</div>
               </a>
             </div>
           </div>

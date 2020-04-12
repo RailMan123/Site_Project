@@ -31,9 +31,50 @@ app.config['PERMANENT_SESSION_LIFETIME'] = datetime.timedelta(days=365)
 app.config['SECRET_KEY'] = 'very_secret_key'
 login_manager = LoginManager()
 login_manager.init_app(app)
-logging.basicConfig(level=logging.INFO)
+# logging.basicConfig(level=logging.INFO)
 api = Api(app)
 SERVER = 'http://localhost:5000'
+DISCOUNT_WORDS = ['sale', 'discount', 'распродажа', 'скид', 'акция', 'дисконт']
+MALE_WORDS = ['male', 'муж']
+FEMALE_WORDS = ['female', 'жен']
+
+
+def search_product(text):
+    try:
+        if text.isdigit():
+            product = get(f'{SERVER}/get_one_product/{text}')
+            if product:
+                return redirect(f'/product/{text}')
+        text = text.lower()
+        for i in range(len(DISCOUNT_WORDS)):
+            if DISCOUNT_WORDS[i] in text:
+                return redirect('/discounts')
+        for i in range(len(MALE_WORDS)):
+            if DISCOUNT_WORDS[i] in text:
+                return redirect('/formales')
+        for i in range(len(FEMALE_WORDS)):
+            if DISCOUNT_WORDS[i] in text:
+                return redirect('/forfemales')
+        if 'adidas' in text or 'nike' in text or 'djordan' in text:
+            form_of_search = SearchItemForm()
+            count = 9
+            listt = get(f'{SERVER}/main').json()
+            list_of_products = []
+            for items in listt['products'][::-1]:
+                if count == 0:
+                    break
+                if text in items['brands']:
+                    list_of_products.append(items)
+                    count -= 1
+            return render_template('index_sorted.html', list_of_products=list_of_products,
+                                   form_of_search=form_of_search)
+        listt = get(f'{SERVER}/main').json()
+        for i in listt['products'][::-1]:
+            if i['name_of_product'].lower() in text or text in i['name_of_product'].lower():
+                return redirect(f'/product/{i["id"]}')
+        return redirect('/')
+    except Exception:
+        return redirect('/')
 
 
 @login_manager.user_loader
@@ -54,23 +95,11 @@ class SearchItemForm(FlaskForm):
     submit_of_search = SubmitField('')
 
 
-@app.after_request
-def add_header(response):
-    """
-    Add headers to both force latest IE rendering engine or Chrome Frame,
-    and also to cache the rendered page for 10 minutes.
-    """
-    response.headers['X-UA-Compatible'] = 'IE=Edge,chrome=1'
-    response.headers['Cache-Control'] = 'public, max-age=0'
-    return response
-
-
 @app.route("/", methods=["GET", "POST"])
 def main_page():
-    form = SearchItemForm()
-
-    if form.validate_on_submit():
-        print(form.search_item.data)
+    form_of_search = SearchItemForm()
+    if form_of_search.validate_on_submit():
+        return search_product(form_of_search.search_item.data)
     count = 9
     listt = get(f'{SERVER}/main').json()
     list_of_products = []
@@ -79,61 +108,67 @@ def main_page():
             break
         list_of_products.append(items)
         count -= 1
-    # form_of_search=form
-    return render_template('index.html', list_of_products=list_of_products)
+    return render_template('index.html', list_of_products=list_of_products, form_of_search=form_of_search)
 
 
 @app.route("/discounts")
 def discounts_page():
-    connect = db_session.create_session()
+    form_of_search = SearchItemForm()
+    if form_of_search.validate_on_submit():
+        return search_product(form_of_search.search_item.data)
     count = 9
     list_of_products = []
-    for items in connect.query(Products).all():
+    listt = get(f'{SERVER}/main').json()
+    for items in listt['products'][::-1]:
         if count == 0:
             break
         try:
-            if items.discount != None:
-                print(items.discount)
+            if items['discount'] != '':
                 list_of_products.append(items)
                 count -= 1
         except:
             pass
-    return render_template('index.html', list_of_products=list_of_products)
+    return render_template('index_sorted.html', list_of_products=list_of_products, form_of_search=form_of_search)
 
 
 @app.route("/formales")
 def male_page():
-    connect = db_session.create_session()
+    form_of_search = SearchItemForm()
+    if form_of_search.validate_on_submit():
+        return search_product(form_of_search.search_item.data)
     count = 9
     list_of_products = []
-    for items in connect.query(Products).all():
+    listt = get(f'{SERVER}/main').json()
+    for items in listt['products'][::-1]:
         if count == 0:
             break
         try:
-            if items.sax_cat == 'men':
+            if items['sex_category'] == 'men':
                 list_of_products.append(items)
                 count -= 1
         except:
             pass
-    print(list_of_products)
-    return render_template('index.html', list_of_products=list_of_products)
+    return render_template('index_sorted.html', list_of_products=list_of_products, form_of_search=form_of_search)
 
 
 @app.route("/forfemales")
 def female_page():
-    connect = db_session.create_session()
+    form_of_search = SearchItemForm()
+    if form_of_search.validate_on_submit():
+        return search_product(form_of_search.search_item.data)
     count = 9
     list_of_products = []
-    for items in connect.query(Products).all():
+    listt = get(f'{SERVER}/main').json()
+    for items in listt['products'][::-1]:
         if count == 0:
             break
         try:
-            if items.sax_cat == 'women':
+            if items['sex_category'] == 'women':
                 list_of_products.append(items)
                 count -= 1
         except:
             pass
-    return render_template('index.html', list_of_products=list_of_products)
+    return render_template('index_sorted.html', list_of_products=list_of_products, form_of_search=form_of_search)
 
 
 class ProductForm(FlaskForm):
@@ -156,9 +191,12 @@ def show_product(value):
             user['basket'] = user['basket'] + f'#{value}, {int(form.example.data)}'
         print(post(f'{SERVER}/get_one_user/{current_user.id}', json={'basket': user['basket']}).json())
         connect.commit()
+    form_of_search = SearchItemForm()
+    if form_of_search.validate_on_submit():
+        return search_product(form_of_search.search_item.data)
     elif form.validate_on_submit() and not current_user.is_authenticated:
         return redirect('/login')
-    return render_template('product.html', product=product, form=form)
+    return render_template('product.html', product=product, form=form, form_of_search=form_of_search)
 
 
 @app.errorhandler(404)
@@ -179,8 +217,10 @@ def show_basket_of_user():
     if not current_user.is_authenticated:
         return redirect('/login')
     else:
+        form_of_search = SearchItemForm()
+        if form_of_search.validate_on_submit():
+            return search_product(form_of_search.search_item.data)
         user = get(f'{SERVER}/get_one_user/{current_user.id}').json()['user']
-        print(user)
         rip = user['basket']
         new_list_of_items = []
         list_of_items = user['basket'].split('#')
@@ -188,7 +228,7 @@ def show_basket_of_user():
             if list_of_items[i] != '':
                 listt = list(map(int, list_of_items[i].split(', ')))
                 intermid = get(f'{SERVER}/get_one_product/{listt[0]}').json()
-                if 'error' in intermid:
+                if not intermid:
                     rip = rip.split("#" + ", ".join(map(str, listt)))
                     rip = "".join(rip)
                     continue
@@ -196,7 +236,8 @@ def show_basket_of_user():
                 new_list_of_items.append(listt)
         user['basket'] = rip
         print(post(f'{SERVER}/get_one_user/{current_user.id}', json={'basket': user['basket']}).json())
-        return render_template('basket_of_auth_user.html', list_of_items=new_list_of_items[::-1])
+        return render_template('basket_of_auth_user.html', list_of_items=new_list_of_items[::-1],
+                               form_of_search=form_of_search)
 
 
 @app.route('/register', methods=['GET', 'POST'])
@@ -226,8 +267,20 @@ def reqister():
 class LoginForm(FlaskForm):
     email = EmailField('Почта', validators=[DataRequired()])
     password = PasswordField('Пароль', validators=[DataRequired()])
-    remember_me = BooleanField('Запомнить меня')
     submit = SubmitField('Войти')
+
+
+@app.route('/admin_add/<name>/<email>/<password>', methods=['GET', 'POST'])
+def admin_add(name, email, password):
+    session = db_session.create_session()
+    admin = Admin(
+        name=name,
+        email=email,
+    )
+    admin.set_password(password)
+    session.add(admin)
+    session.commit()
+    return redirect('/login')
 
 
 @app.route('/login', methods=['GET', 'POST'])
@@ -235,14 +288,14 @@ def login():
     form = LoginForm()
     if form.validate_on_submit():
         session = db_session.create_session()
-        user = session.query(User).filter(User.email == form.email.data).first()
-        if user and user.check_password(form.password.data):
-            login_user(user, remember=form.remember_me.data)
-            return redirect("/")
-        admin = session.query(User).filter(Admin.email == form.email.data).first()
-        if admin and admin.check_password(form.password.data):
-            login_user(admin, remember=form.remember_me.data)
+        admin = session.query(Admin).filter(Admin.email == form.email.data).first()
+        if admin != None and admin.check_password(form.password.data):
+            login_user(admin, remember=True)
             return redirect('/admin_add_product')
+        user = session.query(User).filter(User.email == form.email.data).first()
+        if user != None and user.check_password(form.password.data):
+            login_user(user, remember=True)
+            return redirect("/")
         return render_template('login.html',
                                message="Неправильный логин или пароль",
                                form=form)
@@ -434,9 +487,11 @@ def admin_delete_product():
     return render_template('admin_delete_product.html', admin_name=admin['name'], admin_email=admin['email'],
                            title='AdminPanel', form=admin_form, message="")
 
+
 class AdminDeletUser(FlaskForm):
     id = StringField('Введите id пользователя', validators=[DataRequired()])
     submit = SubmitField('Удалить')
+
 
 @app.route('/admin_delete_user', methods=["GET", "POST"])
 @login_required
@@ -449,7 +504,7 @@ def admin_delete_user():
     if admin_form.validate_on_submit():
         if admin_form.id.data.isdigit():
             id = int(admin_form.id.data)
-            response = post(f'{SERVER}/delete_user/{id}')
+            response = post(f'{SERVER}/delete_user/{id}').json()
             if response:
                 return render_template('admin_delete_user.html', admin_name=admin['name'],
                                        admin_email=admin['email'],
@@ -468,10 +523,5 @@ if __name__ == "__main__":
     api.add_resource(AdminsResource, f'/get_one_admin/<int:admin>')
     api.add_resource(ProductsAddResource, f'/add_new_product')
     api.add_resource(ProductDeleteResource, f'/delete_product/<int:value>')
-    api.add_resource(UserDeleteResource, f'/delete_user/<int:value>')
+    api.add_resource(UserDeleteResource, f'/delete_user/<int:user>')
     app.run()
-
-# {{ form_of_search.hidden_tag() }}
-# {{ form_of_search.csrf_token }}
-# {{ form_of_search.search_item }}
-# {{ form_of_search.submit_of_search(class="img_of_search")}}

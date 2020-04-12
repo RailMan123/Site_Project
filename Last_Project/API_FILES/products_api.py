@@ -10,14 +10,6 @@ app = Flask(__name__)
 api = Api(app)
 
 
-def abort_if_product_not_found(product_id):
-    session = db_session.create_session()
-    product = session.query(Products).filter(Products.id == product_id).first()
-    if product is None:
-        return False
-    return True
-
-
 def abort_if_not_found(product_id):
     session = db_session.create_session()
     product = session.query(Products).filter(Products.id == product_id).first()
@@ -27,20 +19,10 @@ def abort_if_not_found(product_id):
 
 class ProductsResource(Resource):
     def get(self, value):
-        bol = abort_if_product_not_found(value)
-        if not bol:
-            return jsonify({'error': 'product_not_found'})
-        session = db_session.create_session()
-        product = session.query(Products).get(value)
-        return jsonify({'product': product.to_dict()})
-
-    def delete(self, value):
         abort_if_not_found(value)
         session = db_session.create_session()
         product = session.query(Products).get(value)
-        session.delete(product)
-        session.commit()
-        return jsonify({'success': 'OK'})
+        return jsonify({'product': product.to_dict()})
 
     def post(self, value):
         abort_if_not_found(value)
