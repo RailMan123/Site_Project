@@ -1,4 +1,6 @@
 import os
+import random
+
 from flask import Flask, render_template, jsonify
 import datetime
 from flask import Flask, render_template, request
@@ -47,15 +49,15 @@ def search_product(text):
         for i in range(len(DISCOUNT_WORDS)):
             if DISCOUNT_WORDS[i] in text:
                 return redirect('/discounts')
-        for i in range(len(MALE_WORDS)):
-            if DISCOUNT_WORDS[i] in text:
-                return redirect('/formales')
         for i in range(len(FEMALE_WORDS)):
-            if DISCOUNT_WORDS[i] in text:
+            if FEMALE_WORDS[i] in text:
                 return redirect('/forfemales')
+        for i in range(len(MALE_WORDS)):
+            if MALE_WORDS[i] in text:
+                return redirect('/formales')
         if 'adidas' in text or 'nike' in text or 'djordan' in text:
             form_of_search = SearchItemForm()
-            count = 9
+            count = 8
             listt = get(f'{SERVER}/main').json()
             list_of_products = []
             for items in listt['products'][::-1]:
@@ -64,15 +66,32 @@ def search_product(text):
                 if text in items['brands']:
                     list_of_products.append(items)
                     count -= 1
+
             return render_template('index_sorted.html', list_of_products=list_of_products,
                                    form_of_search=form_of_search)
         listt = get(f'{SERVER}/main').json()
         for i in listt['products'][::-1]:
             if i['name_of_product'].lower() in text or text in i['name_of_product'].lower():
-                return redirect(f'/product/{i["id"]}')
+                form_of_search = SearchItemForm()
+                count = 8
+                list_of_products = []
+                for items in listt['products'][::-1]:
+                    if count == 0:
+                        break
+                    try:
+                        if items['name_of_product'].lower() in text or text in items['name_of_product'].lower():
+                            list_of_products.append(items)
+                            count -= 1
+                    except:
+                        pass
+                    random.shuffle(list_of_products)
+                return render_template('index_sorted.html', list_of_products=list_of_products,
+                                       form_of_search=form_of_search)
+
         return redirect('/')
     except Exception:
         return redirect('/')
+
 
 
 @login_manager.user_loader
@@ -98,7 +117,7 @@ def main_page():
     form_of_search = SearchItemForm()
     if form_of_search.validate_on_submit():
         return search_product(form_of_search.search_item.data)
-    count = 9
+    count = 8
     listt = get(f'{SERVER}/main').json()
     list_of_products = []
     for items in listt['products'][::-1]:
@@ -106,15 +125,16 @@ def main_page():
             break
         list_of_products.append(items)
         count -= 1
+    random.shuffle(list_of_products)
     return render_template('index.html', list_of_products=list_of_products, form_of_search=form_of_search)
 
 
-@app.route("/discounts")
+@app.route("/discounts", methods=["GET", "POST"])
 def discounts_page():
     form_of_search = SearchItemForm()
     if form_of_search.validate_on_submit():
         return search_product(form_of_search.search_item.data)
-    count = 9
+    count = 8
     list_of_products = []
     listt = get(f'{SERVER}/main').json()
     for items in listt['products'][::-1]:
@@ -126,15 +146,16 @@ def discounts_page():
                 count -= 1
         except:
             pass
+        random.shuffle(list_of_products)
     return render_template('index_sorted.html', list_of_products=list_of_products, form_of_search=form_of_search)
 
 
-@app.route("/formales")
+@app.route("/formales", methods=["GET", "POST"])
 def male_page():
     form_of_search = SearchItemForm()
     if form_of_search.validate_on_submit():
         return search_product(form_of_search.search_item.data)
-    count = 9
+    count = 8
     list_of_products = []
     listt = get(f'{SERVER}/main').json()
     for items in listt['products'][::-1]:
@@ -146,15 +167,16 @@ def male_page():
                 count -= 1
         except:
             pass
+        random.shuffle(list_of_products)
     return render_template('index_sorted.html', list_of_products=list_of_products, form_of_search=form_of_search)
 
 
-@app.route("/forfemales")
+@app.route("/forfemales", methods=["GET", "POST"])
 def female_page():
     form_of_search = SearchItemForm()
     if form_of_search.validate_on_submit():
         return search_product(form_of_search.search_item.data)
-    count = 9
+    count = 8
     list_of_products = []
     listt = get(f'{SERVER}/main').json()
     for items in listt['products'][::-1]:
@@ -166,8 +188,8 @@ def female_page():
                 count -= 1
         except:
             pass
+        random.shuffle(list_of_products)
     return render_template('index_sorted.html', list_of_products=list_of_products, form_of_search=form_of_search)
-
 
 class ProductForm(FlaskForm):
     submit = SubmitField('Submit')
