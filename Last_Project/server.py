@@ -19,8 +19,6 @@ from data.products import Products
 from data.users import User
 from API_FILES.products_api import ProductsListResource, ProductsResource
 from API_FILES.user_api import UserResource
-from API_FILES.admins_api import AdminsResource
-from data.admins import Admin
 from API_FILES.products_api import ProductsAddResource
 from API_FILES.products_api import ProductDeleteResource
 
@@ -255,7 +253,8 @@ def reqister():
                                    message="Такой пользователь уже есть")
         user = User(
             email=form.email.data,
-            name=form.name.data
+            name=form.name.data,
+            admin=0,
         )
         user.set_password(form.password.data)
         session.add(user)
@@ -270,31 +269,16 @@ class LoginForm(FlaskForm):
     submit = SubmitField('Войти')
 
 
-@app.route('/admin_add/<name>/<email>/<password>', methods=['GET', 'POST'])
-def admin_add(name, email, password):
-    session = db_session.create_session()
-    admin = Admin(
-        name=name,
-        email=email,
-    )
-    admin.set_password(password)
-    session.add(admin)
-    session.commit()
-    return redirect('/login')
-
-
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     form = LoginForm()
     if form.validate_on_submit():
         session = db_session.create_session()
-        admin = session.query(Admin).filter(Admin.email == form.email.data).first()
-        if admin != None and admin.check_password(form.password.data):
-            login_user(admin, remember=True)
-            return redirect('/admin_add_product')
         user = session.query(User).filter(User.email == form.email.data).first()
         if user != None and user.check_password(form.password.data):
             login_user(user, remember=True)
+            if user.admin != None and user.admin:
+                return redirect('/admin_add_product')
             return redirect("/")
         return render_template('login.html',
                                message="Неправильный логин или пароль",
@@ -330,10 +314,10 @@ class AdminAddProduct(FlaskForm):
 @login_required
 def admin_add_product():
     admin_form = AdminAddProduct()
-    admin = get(f'{SERVER}/get_one_admin/{current_user.id}').json()
-    if 'error' in admin:
+    admin = get(f'{SERVER}/get_one_user/{current_user.id}')
+    if not admin or not admin.json()['user']['admin']:
         return redirect('/login')
-    admin = admin['admin']
+    admin = admin.json()['user']
     if admin_form.validate_on_submit():
         connect = db_session.create_session()
         last_product = connect.query(Products).order_by(Products.id.desc()).first()
@@ -391,17 +375,16 @@ class AdminEditProduct(FlaskForm):
 @login_required
 def admin_edit_product():
     admin_form = AdminEditProduct()
-    admin = get(f'{SERVER}/get_one_admin/{current_user.id}').json()
-    if 'error' in admin:
+    admin = get(f'{SERVER}/get_one_user/{current_user.id}')
+    if not admin or not admin.json()['user']['admin']:
         return redirect('/login')
-    admin = admin['admin']
+    admin = admin.json()['user']
     if admin_form.validate_on_submit():
         data = {}
         if admin_form.id.data is None or not admin_form.id.data.isdigit():
             return render_template('admin_edit_product.html', admin_name=admin['name'], admin_email=admin['email'],
                                    title='AdminPanel', form=admin_form, message="Data entered incorrectly")
         id = int(admin_form.id.data)
-        print(id)
         name_of_product = admin_form.name_of_product.data
         about_product = admin_form.about_product.data
         price_product = admin_form.price_product.data
@@ -449,7 +432,6 @@ def admin_edit_product():
                 fil.write(f.read())
             data['src_of_img'] = file_name
         response = post(f'{SERVER}/get_one_product/{id}', json=data)
-        print(response)
         if response:
             return render_template('admin_edit_product.html', admin_name=admin['name'], admin_email=admin['email'],
                                    title='AdminPanel', form=admin_form, message="Success")
@@ -467,10 +449,10 @@ class AdminDeletProduct(FlaskForm):
 @app.route('/admin_delete_product', methods=["GET", "POST"])
 @login_required
 def admin_delete_product():
-    admin = get(f'{SERVER}/get_one_admin/{current_user.id}').json()
-    if 'error' in admin:
+    admin = get(f'{SERVER}/get_one_user/{current_user.id}')
+    if not admin or not admin.json()['user']['admin']:
         return redirect('/login')
-    admin = admin['admin']
+    admin = admin.json()['user']
     admin_form = AdminDeletProduct()
     if admin_form.validate_on_submit():
         if admin_form.id.data.isdigit():
@@ -496,21 +478,28 @@ class AdminDeletUser(FlaskForm):
 @app.route('/admin_delete_user', methods=["GET", "POST"])
 @login_required
 def admin_delete_user():
-    admin = get(f'{SERVER}/get_one_admin/{current_user.id}').json()
-    if 'error' in admin:
+    admin = get(f'{SERVER}/get_one_user/{current_user.id}')
+    if not admin or not admin.json()['user']['admin']:
         return redirect('/login')
-    admin = admin['admin']
-    admin_form = AdminDeletProduct()
+    admin = admin.json()['user']
+    admin_form = AdminDeletUser()
     if admin_form.validate_on_submit():
         if admin_form.id.data.isdigit():
             id = int(admin_form.id.data)
-            response = post(f'{SERVER}/delete_user/{id}').json()
-            if response:
-                return render_template('admin_delete_user.html', admin_name=admin['name'],
-                                       admin_email=admin['email'],
-                                       title='AdminPanel', form=admin_form, message="Success")
+            if_user_admin = get(f'{SERVER}/get_one_user/{id}')
+            if if_user_admin and (not if_user_admin.json()['user']['admin'] or admin['name'] == 'MainAdmin'):
+                response = post(f'{SERVER}/delete_user/{id}').json()
+                if response:
+                    return render_template('admin_delete_user.html', admin_name=admin['name'],
+                                           admin_email=admin['email'],
+                                           title='AdminPanel', form=admin_form, message="Success")
+                return render_template('admin_delete_user.html', admin_name=admin['name'], admin_email=admin['email'],
+                                       title='AdminPanel', form=admin_form, message="Failed to delete the user")
             return render_template('admin_delete_user.html', admin_name=admin['name'], admin_email=admin['email'],
-                                   title='AdminPanel', form=admin_form, message="Something went wrong")
+                                   title='AdminPanel', form=admin_form,
+                                   message="The user doesn't exist or you are trying to delete the admin")
+        return render_template('admin_delete_user.html', admin_name=admin['name'], admin_email=admin['email'],
+                               title='AdminPanel', form=admin_form, message="Check that the data is correct")
     return render_template('admin_delete_user.html', admin_name=admin['name'], admin_email=admin['email'],
                            title='AdminPanel', form=admin_form, message="")
 
@@ -520,7 +509,6 @@ if __name__ == "__main__":
     api.add_resource(ProductsListResource, '/main')
     api.add_resource(ProductsResource, f'/get_one_product/<int:value>')
     api.add_resource(UserResource, f'/get_one_user/<int:user>')
-    api.add_resource(AdminsResource, f'/get_one_admin/<int:admin>')
     api.add_resource(ProductsAddResource, f'/add_new_product')
     api.add_resource(ProductDeleteResource, f'/delete_product/<int:value>')
     api.add_resource(UserDeleteResource, f'/delete_user/<int:user>')
