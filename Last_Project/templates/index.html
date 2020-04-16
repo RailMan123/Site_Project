@@ -115,7 +115,11 @@
               <div class="about" style="padding-top: 50px">
                 <div class="about-items">
                   <h1>{{items['name_of_product']}}</h1>
-                  <span>{{items['price_product']}}руб.</span>
+                  {% if items['discount'] != None and items['discount'] != '' %}
+                    <span>{{items['discount']}}руб. -{{ ((((items['price_product'] | int) - (items['discount'] | int)) / (items['price_product'] | int)) * 100) | int}}% </span>
+                  {% else %}
+                    <span>{{items['price_product']}}руб.</span>
+                  {% endif %}
                 </div>
               </div>
             </div>

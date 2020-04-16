@@ -203,6 +203,11 @@ def show_product(value):
     connect = db_session.create_session()
     product = get(f'{SERVER}/get_one_product/{value}').json()['product']
     form = ProductForm()
+    choices = []
+    for i in product['available_sizes'].split():
+        choices.append((i, i))
+    form.example.choices = choices
+
     if form.validate_on_submit() and current_user.is_authenticated and form.example.data != None:
         user = get(f'{SERVER}/get_one_user/{current_user.id}').json()['user']
         if user['basket'] == None:
@@ -211,6 +216,7 @@ def show_product(value):
             user['basket'] = user['basket'] + f'#{value}, {int(form.example.data)}'
         print(post(f'{SERVER}/get_one_user/{current_user.id}', json={'basket': user['basket']}).json())
         connect.commit()
+
     form_of_search = SearchItemForm()
     if form_of_search.validate_on_submit():
         return search_product(form_of_search.search_item.data)
@@ -350,10 +356,10 @@ def admin_add_product():
             fil.write(f.read())
         if not admin_form.price_product.data.isdigit():
             return render_template('admin_panel_add_product.html', admin_name=admin['name'], admin_email=admin['email'],
-                                   title='AdminPanel', form=admin_form, message="Data entered incorrectly")
+                                   title='AdminPanel', form=admin_form, message="Product price entered incorrectly")
         if admin_form.discount.data != '' and not admin_form.discount.data.isdigit():
             return render_template('admin_panel_add_product.html', admin_name=admin['name'], admin_email=admin['email'],
-                                   title='AdminPanel', form=admin_form, message="Data entered incorrectly")
+                                   title='AdminPanel', form=admin_form, message="Discount field entered incorrectly")
         available_sizes = admin_form.available_sizes.data.split()
         for i in available_sizes:
             if len(i) > 2 and not i.isdigit():
@@ -362,7 +368,7 @@ def admin_add_product():
                                        title='AdminPanel', form=admin_form, message="This size does not exist")
         if admin_form.sex_category.data.lower() != 'men' and admin_form.sex_category.data.lower() != 'women' and admin_form.sex_category.data.lower() != 'men/women' and admin_form.sex_category.data.lower() != 'women/men':
             return render_template('admin_panel_add_product.html', admin_name=admin['name'], admin_email=admin['email'],
-                                   title='AdminPanel', form=admin_form, message="Data entered incorrectly")
+                                   title='AdminPanel', form=admin_form, message="Sex category entered incorrectly")
         response = post(f'{SERVER}/add_new_product', json={'name_of_product': admin_form.name_of_product.data,
                                                            'about_product': admin_form.about_product.data,
                                                            'price_product': admin_form.price_product.data,
@@ -405,7 +411,7 @@ def admin_edit_product():
         data = {}
         if admin_form.id.data is None or not admin_form.id.data.isdigit():
             return render_template('admin_edit_product.html', admin_name=admin['name'], admin_email=admin['email'],
-                                   title='AdminPanel', form=admin_form, message="Data entered incorrectly")
+                                   title='AdminPanel', form=admin_form, message="Choose correct id")
         id = int(admin_form.id.data)
         name_of_product = admin_form.name_of_product.data
         about_product = admin_form.about_product.data
@@ -424,19 +430,19 @@ def admin_edit_product():
             if sex_category.lower() != 'men' and sex_category.lower() != 'women' and sex_category.lower() != 'men/women' and sex_category.lower() != 'women/men':
                 return render_template('admin_edit_product.html', admin_name=admin['name'],
                                        admin_email=admin['email'],
-                                       title='AdminPanel', form=admin_form, message="Data entered incorrectly")
+                                       title='AdminPanel', form=admin_form, message="Sex category entered incorrectly")
             data['sex_category'] = sex_category.lower()
         if price_product != '':
             if not price_product.isdigit():
                 return render_template('admin_edit_product.html', admin_name=admin['name'],
                                        admin_email=admin['email'],
-                                       title='AdminPanel', form=admin_form, message="Data entered incorrectly")
+                                       title='AdminPanel', form=admin_form, message="Product price entered incorrectly")
             data['price_product'] = price_product
         if discount != '':
             if not discount.isdigit():
                 return render_template('admin_edit_product.html', admin_name=admin['name'],
                                        admin_email=admin['email'],
-                                       title='AdminPanel', form=admin_form, message="Data entered incorrectly")
+                                       title='AdminPanel', form=admin_form, message="Discount field entered incorrectly")
             data['discount'] = admin_form.discount.data
         if available_sizes != '':
             for i in available_sizes:
@@ -477,7 +483,7 @@ def admin_delete_product():
     admin = admin.json()['user']
     admin_form = AdminDeletProduct()
     if admin_form.validate_on_submit():
-        if admin_form.id.data.isdigit():
+        if admin_form.id.data.isdigit() :
             id = int(admin_form.id.data)
             response = post(f'{SERVER}/delete_product/{id}')
             file = f"static/img/products-img/product{id}_photo.png"

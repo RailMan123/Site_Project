@@ -15,7 +15,11 @@
             <h3>{{size}}</h3>
           </div>
           <div class="price">
-            <h6 style="color: #ff7373;">{{items['price_product']}}руб</h6>
+            {% if items['discount'] != None and items['discount'] != '' %}
+              <h6 style="color: #ff7373;">{{items['discount']}}руб. -{{ ((((items['price_product'] | int) - (items['discount'] | int)) / (items['price_product'] | int)) * 100) | int}}% </h6>
+            {% else %}
+              <h6 style="color: #ff7373;">{{items['price_product']}}руб.</h6>
+            {% endif %}
           </div>
           <a href="/basket_item_delete/{{items['id']}}/{{size}}" class="btn btn-danger" style="margin-top: 30px;">Удалить из корзины</a>
         </div>

@@ -16,7 +16,11 @@
         </div>
 
         <div class="price_of_item" style="margin-top: 30px; color: #ff4f00;">
-          <h1>{{product.price_product}} руб</h1>
+          {% if product['discount'] != None and product['discount'] != '' %}
+              <h1>{{product['discount']}}руб. -{{ ((((product['price_product'] | int) - (product['discount'] | int)) / (product['price_product'] | int)) * 100) | int}}% </h1>
+          {% else %}
+              <h1>{{product['price_product']}}руб.</h1>
+          {% endif %}
         </div>
         <div class="button-to-order">
           <button type="submit" class="btn btn-success" style=" background-color: #ff7373; ">Add to basket</button>
