@@ -65,7 +65,7 @@ def search_product(text):
                     count -= 1
 
             return render_template('index_sorted.html', list_of_products=list_of_products,
-                                   form_of_search=form_of_search)
+                                   form_of_search=form_of_search, how_much_items_in_basket=how_much_items_in_basket())
         listt = get(f'{SERVER}/main').json()
         for i in listt['products'][::-1]:
             if i['name_of_product'].lower() in text or text in i['name_of_product'].lower():
@@ -83,7 +83,7 @@ def search_product(text):
                         pass
                     random.shuffle(list_of_products)
                 return render_template('index_sorted.html', list_of_products=list_of_products,
-                                       form_of_search=form_of_search)
+                                       form_of_search=form_of_search, how_much_items_in_basket=how_much_items_in_basket())
 
         return redirect('/')
     except Exception:
