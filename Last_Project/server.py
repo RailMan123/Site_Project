@@ -281,6 +281,8 @@ def show_basket_of_user():
             return search_product(form_of_search.search_item.data)
         user = get(f'{SERVER}/get_one_user/{current_user.id}').json()['user']
         rip = user['basket']
+        if user['basket'] == None:
+            user['basket'] = f""
         new_list_of_items = []
         list_of_items = user['basket'].split('#')
         for i in range(len(list_of_items)):
