@@ -9,6 +9,7 @@
   <link rel="stylesheet" href="../static/css/products.css">
   <link rel="stylesheet" href="../static/css/basket_.css">
   <link rel="stylesheet" href="../static/css/products_items.css">
+  <link rel="stylesheet" href="../static/css/reviews.css">
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
     integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
   <title>Street23</title>
@@ -25,7 +26,7 @@
           <div class="wrap-block">
             <div class="first_logo_div col-md-4">
               <a href="/" style="height:100%;width:100%;text-decoration:none;">
-                <img src="../static/../static/img/mian_logo_img.png" alt="" class='img-of-logo'>
+                <img src="../static/img/mian_logo_img.png" alt="" class='img-of-logo'>
                 <h1 class='logo_name'>street 23</h1>
               </a>
             </div>
@@ -44,18 +45,17 @@
 
               <div class="personal_accaunt">
                 {% if current_user.is_authenticated %}
-                  <a class="navbar-brand" href="/logout" style="display:inline-block;">{{ current_user.name }}</a>
+                <a class="navbar-brand" href="/logout" style="display:inline-block;">{{ current_user.name }}</a>
                 {% endif %}
                 <a href="/login" class="profile_logo_link">
-                  <img src="../static/../static/img/profile_logo.png" alt="" class='profile_logo'>
+                  <img src="../static/img/profile_logo.png" alt="" class='profile_logo'>
                 </a>
 
                 <a href="/basket" class="img_of_basket_link">
-                  <img src="../static/../static/img/basket_logo.png" alt="" class='img_of_basket'>
-                  <img src="../static/../static/img/product_frame.png" alt="" class='product_count'>
-                </a>
-                <a href="" class="amount_value_link">
-                  <span class='amount_value'></span>
+                  <img src="../static/img/basket_logo.png" alt="" class='img_of_basket'>
+                  <img src="../static/img/product_frame.png" alt="" class='product_count'>
+                  <span class='amount_value'
+                    style="font-size:16px;text-align: center;width: 15px;transform: translate(-255%, 123%);color: #fff;display: inline-block;position: absolute;">{{how_much_items_in_basket}}</span>
                 </a>
               </div>
             </div>
@@ -75,6 +75,7 @@
             <a href="/discounts" class="link_of_nav_bar sales">Скидки</a>
             <a href="/formales" class="link_of_nav_bar male">Мужское</a>
             <a href="/forfemales" class="link_of_nav_bar female">Женское</a>
+            <a href="/reviews" class="link_of_nav_bar female">Отзывы</a>
           </div>
         </div>
       </div>

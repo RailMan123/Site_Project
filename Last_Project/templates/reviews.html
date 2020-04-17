@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="container-fluid" style="background: #FF6E62;">
+<div class="container reviews-cont" style="padding-top: 50px;padding-bottom: 50px;color:#fff;">
+  <div class="make-review" style="width: 100%;padding:50px 30px;">
+    <form method="POST">
+      <h1 style="margin-bottom: 15px;">Опубликовать отзыв</h1>
+      {{ form_of_make_review.hidden_tag() }}
+      {{ form_of_make_review.csrf_token }}
+      {{ form_of_make_review.review(type="textarea", style="outline:none;background-color: #ffe4e1;width:60%;display:block;height: 100px;border-radius: 7px;color:#FF6E62;padding:15px;font-size:20px;",
+      placeholder="Введите ваш отзыв...")}}
+      {{ form_of_make_review.submit(class="btn btn-danger", style="color:#fff;display: block;margin-top: 15px;width: 20%;height: 100%;font-size: 18px;")}}
+      <!-- <textarea name="" id="" style="background-color: #ffe4e1;width:60%;display:block;height: 100px;border-radius: 7px;color:#fff;padding:15px;"
+        placeholder="Введите ваш отзыв..."></textarea>
+      <button type="submit" class="btn btn-danger" style="margin-top: 30px;">Опубликовать</button> -->
+      <h3 style="margin-top: 10px;">{{message}}</h3>
+    </form>
+  </div>
+</div>
+</div>
+<div class="container-fluid recent_receipts">
+  <div class="container">
+    <div class="wrap">
+      <div class="wrap-block text-center">
+        <span class='text-center'>Отзывы</span>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="container reviews-cont" style="margin-top: 50px;margin-bottom: 50px;color:#fff;">
+  {% for review in reviews_list %}
+    <div class="reviews" style="background: #FF6E62;border-radius: 10px;margin-top: 40px;width: 100%;padding: 30px 50px;">
+      <div class="about-user" style="display: inline-block;">
+        <h1 style="font-size: 20px;">{{review['name']}}</h1><span style="font-size: 20px;">{{review['email']}}</span>
+      </div>
+      <div class="review" style="display: inline-block;font-size: 20px; margin-left: 50px;"><span>{{review['reviews']}}</span></div>
+      <h3 style="color:#fff;margin-top: 5px;font-size:11px;">{{review['modified_date']}}</h3>
+      {% if current_user.id == review['id_of_user'] or review['admin'] %}
+        <a class="btn btn-success" href="/delete_one_review/{{review['id']}}" style="color:#fff;display: block;margin-top: 15px;width: 15%;height: 100%;font-size: 14px;">Удалить отзыв</a>
+      {% endif %}
+    </div>
+  {% endfor %}
+</div>
+{% endblock %}
