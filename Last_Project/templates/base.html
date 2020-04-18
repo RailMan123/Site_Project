@@ -5,6 +5,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <link rel="icon" href="../static/img/mian_logo_img.png" type="image/x-icon">
   <link rel="stylesheet" href="../static/css/index.css">
   <link rel="stylesheet" href="../static/css/products.css">
   <link rel="stylesheet" href="../static/css/basket_.css">
@@ -37,7 +38,7 @@
                   {{ form_of_search.hidden_tag() }}
                   {{ form_of_search.csrf_token }}
                   {{ form_of_search.search_item }}
-                  {{ form_of_search.submit_of_search(class="img_of_search")}}
+                  {{ form_of_search.submit_of_search(class="img_of_search", style="z-index:100;")}}
                 </form>
               </div>
             </div>
@@ -91,7 +92,7 @@
 
 
   <!-- HELP -->
-  <div class="container-fluid help">
+  <!-- <div class="container-fluid help">
     <div class="wrapper">
       <div class="wrapper-block">
         <div class="container">
@@ -115,7 +116,7 @@
         </div>
       </div>
     </div>
-  </div>
+  </div> -->
   <!-- CLOSE HELP -->
 
   <div class="container-fluid footer">

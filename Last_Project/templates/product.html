@@ -17,7 +17,8 @@
 
         <div class="price_of_item" style="margin-top: 30px; color: #ff4f00;">
           {% if product['discount'] != None and product['discount'] != '' %}
-              <h1>{{product['discount']}}руб. -{{ ((((product['price_product'] | int) - (product['discount'] | int)) / (product['price_product'] | int)) * 100) | int}}% </h1>
+              <h1>{{product['discount']}}руб.</h1>
+              <h3 style="background-color: #ff4f00; color:#fff;width: 60px;border-radius: 50%;text-align:center;font-size:16px;">{{ ((((product['price_product'] | int) - (product['discount'] | int)) / (product['price_product'] | int)) * 100) | int}}%</h3>
           {% else %}
               <h1>{{product['price_product']}}руб.</h1>
           {% endif %}

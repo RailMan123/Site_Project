@@ -8,14 +8,14 @@
         <div class="items text-center">
           {% for items in list_of_products %}
           <a href="product/{{items['id']}}">
-            <div class="item">
+            <div class="item" style="position: relative;">
               <div class="img-block"><img src="{{ url_for('static', filename='img/products-img/' + items['src_of_img']) }}" alt=""
                   style="height:100%;width:80%;border-radius: 10px;margin-bottom: 15px;border-radius: 50%"></div>
               <div class="about" style="padding-top: 50px">
                 <div class="about-items">
                   <h1>{{items['name_of_product']}}</h1>
                   {% if items['discount'] != None and items['discount'] != '' %}
-                    <span>{{items['discount']}}руб. -{{ ((((items['price_product'] | int) - (items['discount'] | int)) / (items['price_product'] | int)) * 100) | int}}% </span>
+                    <span>{{items['discount']}}руб.</span><span style="display: block;position: absolute;top:10px;color: #fff;background-color: #E44235;border-radius: 50%;width: 60px;">{{ ((((items['price_product'] | int) - (items['discount'] | int)) / (items['price_product'] | int)) * 100) | int}}%</span>
                   {% else %}
                     <span>{{items['price_product']}}руб.</span>
                   {% endif %}

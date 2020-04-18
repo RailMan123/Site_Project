@@ -83,7 +83,8 @@ def search_product(text):
                         pass
                     random.shuffle(list_of_products)
                 return render_template('index_sorted.html', list_of_products=list_of_products,
-                                       form_of_search=form_of_search, how_much_items_in_basket=how_much_items_in_basket())
+                                       form_of_search=form_of_search,
+                                       how_much_items_in_basket=how_much_items_in_basket())
 
         return redirect('/')
     except Exception:
@@ -143,7 +144,6 @@ def main_page():
             break
         list_of_products.append(items)
         count -= 1
-    random.shuffle(list_of_products)
     return render_template('index.html', list_of_products=list_of_products, form_of_search=form_of_search,
                            how_much_items_in_basket=how_much_items_in_basket())
 
@@ -224,13 +224,15 @@ class ProductForm(FlaskForm):
 @app.route('/product/<int:value>', methods=["GET", "POST"])
 def show_product(value):
     connect = db_session.create_session()
-    product = get(f'{SERVER}/get_one_product/{value}').json()['product']
+    product = get(f'{SERVER}/get_one_product/{value}')
+    if not product:
+        pass
+    product = product.json()['product']
     form = ProductForm()
     choices = []
     for i in product['available_sizes'].split():
         choices.append((i, i))
     form.example.choices = choices
-
     if form.validate_on_submit() and current_user.is_authenticated and form.example.data != None:
         user = get(f'{SERVER}/get_one_user/{current_user.id}').json()['user']
         if user['basket'] == None:
@@ -238,6 +240,8 @@ def show_product(value):
         elif f"{value}, {int(form.example.data)}" not in user['basket'].split('#'):
             user['basket'] = user['basket'] + f'#{value}, {int(form.example.data)}'
         print(post(f'{SERVER}/get_one_user/{current_user.id}', json={'basket': user['basket']}).json())
+        data = {"count_of_products": True}
+        response = post(f'{SERVER}/get_one_product/{value}', json=data)
         connect.commit()
 
     form_of_search = SearchItemForm()
@@ -359,6 +363,9 @@ def delete_item_from_basket(value_id, value_size):
     rip = rip.split(f"#{intermid}")
     rip = "".join(rip)
     user['basket'] = rip
+    data = {"count_of_products": False}
+    response = post(f'{SERVER}/get_one_product/{value_id}', json=data)
+    print(response)
     print(post(f'{SERVER}/get_one_user/{current_user.id}', json={'basket': user['basket']}).json())
     return redirect('/basket')
 
@@ -370,6 +377,7 @@ class AdminAddProduct(FlaskForm):
     sex_category = StringField('men/women', validators=[DataRequired()])
     available_sizes = StringField('Введите размеры через пробел', validators=[DataRequired()])
     discount = StringField('*Необязательное поле, введите цену со скидкой')
+    count_of_products = StringField('Введите количество продуктов')
     brands = StringField('Введите производителя, бренд продукта', validators=[DataRequired()])
     submit = SubmitField('Добавить')
 
@@ -430,6 +438,7 @@ class AdminEditProduct(FlaskForm):
     price_product = StringField('Введите цену продукта')
     sex_category = StringField('men/women')
     available_sizes = StringField('Введите размеры через пробел')
+    count_of_products = StringField('Введите количество товаров')
     discount = StringField('*Необязательное поле, введите цену со скидкой')
     brands = StringField('Введите производителя, бренд продукта')
     submit = SubmitField('Изменить')
@@ -455,6 +464,7 @@ def admin_edit_product():
         sex_category = admin_form.sex_category.data
         available_sizes = admin_form.available_sizes.data
         discount = admin_form.discount.data
+        count_of_products = admin_form.count_of_products.data
         brands = admin_form.brands.data
         if name_of_product != '':
             data['name_of_product'] = name_of_product
@@ -478,7 +488,8 @@ def admin_edit_product():
             if not discount.isdigit():
                 return render_template('admin_edit_product.html', admin_name=admin['name'],
                                        admin_email=admin['email'],
-                                       title='AdminPanel', form=admin_form, message="Discount field entered incorrectly")
+                                       title='AdminPanel', form=admin_form,
+                                       message="Discount field entered incorrectly")
             data['discount'] = admin_form.discount.data
         if available_sizes != '':
             for i in available_sizes:
@@ -487,6 +498,12 @@ def admin_edit_product():
                                            admin_email=admin['email'],
                                            title='AdminPanel', form=admin_form, message="This size does not exist")
             data['available_sizes'] = available_sizes
+        if count_of_products != '':
+            if not count_of_products.isdigit():
+                return render_template('admin_edit_product.html', admin_name=admin['name'],
+                                       admin_email=admin['email'],
+                                       title='AdminPanel', form=admin_form, message="Enter the number of products")
+            data['count_of_products'] = count_of_products
         if request.files['file']:
             f = request.files['file']
             file = f"static/img/products-img/product{admin_form.id.data}_photo.png"
@@ -519,7 +536,7 @@ def admin_delete_product():
     admin = admin.json()['user']
     admin_form = AdminDeletProduct()
     if admin_form.validate_on_submit():
-        if admin_form.id.data.isdigit() :
+        if admin_form.id.data.isdigit():
             id = int(admin_form.id.data)
             response = post(f'{SERVER}/get_one_product/{id}')
             if response:
@@ -557,7 +574,9 @@ def admin_delete_user():
         if admin_form.id.data.isdigit():
             id = int(admin_form.id.data)
             if_user_admin = get(f'{SERVER}/get_one_user/{id}')
-            if if_user_admin and (not if_user_admin.json()['user']['admin'] or admin['name'] == 'MainAdmin'):
+            print(if_user_admin)
+            if if_user_admin and int(if_user_admin.json()['user']['admin']) != 1:
+                print(if_user_admin.json()['user']['admin'])
                 response = post(f'{SERVER}/delete_user/{id}').json()
                 if response:
                     return render_template('admin_delete_user.html', admin_name=admin['name'],
@@ -585,45 +604,49 @@ def reviews():
     form_of_make_review = MakeReview()
     reviews_response = get(f"{SERVER}/all_review").json()
     reviews_list = []
+    is_True_admin = 0
+    if current_user.is_authenticated:
+        id = current_user.id
+        response_of_find_user = get(f"{SERVER}/get_one_user/{id}")
+        if response_of_find_user:
+            is_True_admin = int(response_of_find_user.json()['user']['admin'])
     for data_about_review in reviews_response['Reviews'][::-1]:
-        response_of_find_user = get(f"{SERVER}/get_one_user/{data_about_review['id_of_user']}").json()
+        response_of_find_user = get(f"{SERVER}/get_one_user/{data_about_review['id_of_user']}")
         if not response_of_find_user:
             # delete review
-            response_of_find_user = post(f"{SERVER}/delete_one_review/{data_about_review['id_of_user']}")
+            response_of_find_user = post(f"{SERVER}/delete_one_review/{data_about_review['id']}")
             if not response_of_find_user:
                 print(response_of_find_user.json())
+            continue
+        response_of_find_user = response_of_find_user.json()
         data_about_review['name'] = response_of_find_user['user']['name']
         data_about_review['email'] = response_of_find_user['user']['email']
         reviews_list.append(data_about_review)
     if form_of_search.validate_on_submit():
         return search_product(form_of_search.search_item.data)
-    if form_of_make_review.validate_on_submit() and current_user.is_authenticated:
+    if form_of_make_review.validate_on_submit() and current_user.is_authenticated and request.method == 'POST':
         id = current_user.id
         response_of_find_user = get(f"{SERVER}/get_one_user/{id}")
         if not response_of_find_user:
             return render_template("reviews.html", form_of_search=form_of_search, reviews_list=reviews_list,
                                    how_much_items_in_basket=how_much_items_in_basket(),
-                                   form_of_make_review=form_of_make_review, message="Вы не зарегестрированы...")
+                                   form_of_make_review=form_of_make_review, message="Вы не зарегестрированы...",
+                                   curent_admin=is_True_admin)
         data = {"id_of_user": id, "reviews": form_of_make_review.review.data}
         response = post(f"{SERVER}/one_review/{id}", json=data)
         if not response:
             return render_template("reviews.html", form_of_search=form_of_search, reviews_list=reviews_list,
                                    how_much_items_in_basket=how_much_items_in_basket(),
-                                   form_of_make_review=form_of_make_review, message="Что-то пошло не так...")
-        response_of_find_user = response_of_find_user.json()
-        data['name'] = response_of_find_user['user']['name']
-        data['email'] = response_of_find_user['user']['email']
-        data['admin'] = response_of_find_user['user']['admin']
-        reviews_list.append(data)
-        return render_template("reviews.html", form_of_search=form_of_search, reviews_list=reviews_list,
-                               how_much_items_in_basket=how_much_items_in_basket(),
-                               form_of_make_review=form_of_make_review, message="Отзыв опубликован...")
+                                   form_of_make_review=form_of_make_review, message="Что-то пошло не так...",
+                                   curent_admin=is_True_admin)
+        form_of_make_review.review.data = ''
+        return redirect("/reviews")
     elif form_of_make_review.validate_on_submit() and not current_user.is_authenticated:
         return redirect("/login")
 
     return render_template("reviews.html", form_of_search=form_of_search, reviews_list=reviews_list,
                            how_much_items_in_basket=how_much_items_in_basket(), form_of_make_review=form_of_make_review,
-                           message="")
+                           message="", curent_admin=is_True_admin)
 
 
 @app.route('/delete_one_review/<int:value>')

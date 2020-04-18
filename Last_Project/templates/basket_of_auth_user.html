@@ -2,6 +2,9 @@
 {% block content %}
 <div class="bg_of_basket container-fluid">
   <div class="basket_div container">
+    {% if list_of_items == []%}
+      <h1 style="height: 500px;width: 100%;color:#fff;padding-top: 250px;" class="text-center">Корзина пуста...</h1>
+    {% endif %}
     {% for items, size in list_of_items %}
     <a href="/product/{{items['id']}}" style="text-decoration: none;width: inherit;height: inherit;">
       <div class="div_of_goods">

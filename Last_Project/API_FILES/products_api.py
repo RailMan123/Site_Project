@@ -41,6 +41,13 @@ class ProductsResource(Resource):
             product.available_sizes = args['available_sizes']
         if not args['discount'] is None:
             product.discount = args['discount']
+        if not args['count_of_products'] is None:
+            if args['count_of_products'].isdigit():
+                product.count_of_products = int(args['count_of_products'])
+            elif not args['count_of_products']:
+                product.count_of_products += 1
+            else:
+                product.count_of_products -= 1
         if not args['brands'] is None:
             product.brands = args['brands']
         if not args['src_of_img'] is None:
@@ -76,6 +83,7 @@ class ProductsAddResource(Resource):
             src_of_img=args['src_of_img'],
             price_product=args['price_product'],
             sex_category=args['sex_category'],
+            count_of_products=args['count_of_products'],
             available_sizes=args['available_sizes'],
             brands=args['brands'],
         )

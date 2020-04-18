@@ -61,6 +61,14 @@
   </p>
   {% endfor %}
 
+  {{ form.count_of_products.label }}
+  {{ form.count_of_products(class="form-control")}}<br>
+  {% for error in form.count_of_products.errors %}
+  <p class="alert alert-danger" role="alert">
+    {{ error }}
+  </p>
+  {% endfor %}
+
   {{ form.brands.label }}
   {{ form.brands(class="form-control")}}<br>
   {% for error in form.brands.errors %}

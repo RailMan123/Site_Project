@@ -36,7 +36,9 @@
       </div>
       <div class="review" style="display: inline-block;font-size: 20px; margin-left: 50px;"><span>{{review['reviews']}}</span></div>
       <h3 style="color:#fff;margin-top: 5px;font-size:11px;">{{review['modified_date']}}</h3>
-      {% if current_user.id == review['id_of_user'] or review['admin'] %}
+      {% if current_user.id == review['id_of_user']%}
+        <a class="btn btn-success" href="/delete_one_review/{{review['id']}}" style="color:#fff;display: block;margin-top: 15px;width: 15%;height: 100%;font-size: 14px;">Удалить отзыв</a>
+      {% elif is_True_admin == 1 %}
         <a class="btn btn-success" href="/delete_one_review/{{review['id']}}" style="color:#fff;display: block;margin-top: 15px;width: 15%;height: 100%;font-size: 14px;">Удалить отзыв</a>
       {% endif %}
     </div>
