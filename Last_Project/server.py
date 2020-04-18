@@ -398,6 +398,9 @@ def admin_add_product():
         file_name = f"product{last_product.id + 1}_photo.png"
         with open(file, "wb") as fil:
             fil.write(f.read())
+        if not admin_form.count_of_products.data.isdigit():
+            return render_template('admin_panel_add_product.html', admin_name=admin['name'], admin_email=admin['email'],
+                                   title='AdminPanel', form=admin_form, message="Product counts entered incorrectly")
         if not admin_form.price_product.data.isdigit():
             return render_template('admin_panel_add_product.html', admin_name=admin['name'], admin_email=admin['email'],
                                    title='AdminPanel', form=admin_form, message="Product price entered incorrectly")
@@ -418,6 +421,7 @@ def admin_add_product():
                                                            'price_product': admin_form.price_product.data,
                                                            'sex_category': admin_form.sex_category.data.lower(),
                                                            'available_sizes': admin_form.available_sizes.data,
+                                                           'count_of_products': admin_form.count_of_products.data,
                                                            'discount': admin_form.discount.data,
                                                            'brands': admin_form.brands.data,
                                                            'src_of_img': file_name})
