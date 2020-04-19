@@ -44,9 +44,9 @@ class ProductsResource(Resource):
         if not args['count_of_products'] is None:
             if args['count_of_products'].isdigit():
                 product.count_of_products = int(args['count_of_products'])
-            elif not args['count_of_products']:
+            elif args['count_of_products'] == 'pl':
                 product.count_of_products += 1
-            else:
+            elif args['count_of_products'] == 'mn':
                 product.count_of_products -= 1
         if not args['brands'] is None:
             product.brands = args['brands']

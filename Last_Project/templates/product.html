@@ -12,20 +12,28 @@
       <form action="" method="post">
         <div class="size">
           {{ form.hidden_tag() }}
+          {% if error_message == '' %}
           {{ form.example }}
+          {% endif %}
         </div>
 
         <div class="price_of_item" style="margin-top: 30px; color: #ff4f00;">
           {% if product['discount'] != None and product['discount'] != '' %}
-              <h1>{{product['discount']}}руб.</h1>
-              <h3 style="background-color: #ff4f00; color:#fff;width: 60px;border-radius: 50%;text-align:center;font-size:16px;">{{ ((((product['price_product'] | int) - (product['discount'] | int)) / (product['price_product'] | int)) * 100) | int}}%</h3>
+          <h1>{{product['discount']}}руб.</h1>
+          <h3
+            style="background-color: #ff4f00; color:#fff;width: 60px;border-radius: 50%;text-align:center;font-size:16px;">
+            {{ ((((product['price_product'] | int) - (product['discount'] | int)) / (product['price_product'] | int)) * 100) | int}}%
+          </h3>
           {% else %}
-              <h1>{{product['price_product']}}руб.</h1>
+          <h1>{{product['price_product']}}руб.</h1>
           {% endif %}
+          <h1>{{error_message}}</h1>
         </div>
+        {% if error_message == '' %}
         <div class="button-to-order">
           <button type="submit" class="btn btn-success" style=" background-color: #ff7373; ">Add to basket</button>
         </div>
+        {% endif %}
     </div>
     </form>
     <div class="description">

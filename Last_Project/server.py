@@ -225,11 +225,14 @@ class ProductForm(FlaskForm):
 def show_product(value):
     connect = db_session.create_session()
     product = get(f'{SERVER}/get_one_product/{value}')
+    error_message = ''
     if not product:
         pass
     product = product.json()['product']
     form = ProductForm()
     choices = []
+    if product['count_of_products'] <= 0:
+        error_message = 'Товара нет на складе...'
     for i in product['available_sizes'].split():
         choices.append((i, i))
     form.example.choices = choices
@@ -237,11 +240,13 @@ def show_product(value):
         user = get(f'{SERVER}/get_one_user/{current_user.id}').json()['user']
         if user['basket'] == None:
             user['basket'] = f"#{value}, {int(form.example.data)}"
+            data = {"count_of_products": True}
+            response = post(f'{SERVER}/get_one_product/{value}', json=data)
         elif f"{value}, {int(form.example.data)}" not in user['basket'].split('#'):
             user['basket'] = user['basket'] + f'#{value}, {int(form.example.data)}'
+            data = {"count_of_products": 'mn'}
+            response = post(f'{SERVER}/get_one_product/{value}', json=data)
         print(post(f'{SERVER}/get_one_user/{current_user.id}', json={'basket': user['basket']}).json())
-        data = {"count_of_products": True}
-        response = post(f'{SERVER}/get_one_product/{value}', json=data)
         connect.commit()
 
     form_of_search = SearchItemForm()
@@ -250,7 +255,7 @@ def show_product(value):
     elif form.validate_on_submit() and not current_user.is_authenticated:
         return redirect('/login')
     return render_template('product.html', product=product, form=form, form_of_search=form_of_search,
-                           how_much_items_in_basket=how_much_items_in_basket())
+                           how_much_items_in_basket=how_much_items_in_basket(), error_message=error_message)
 
 
 @app.errorhandler(404)
@@ -363,7 +368,7 @@ def delete_item_from_basket(value_id, value_size):
     rip = rip.split(f"#{intermid}")
     rip = "".join(rip)
     user['basket'] = rip
-    data = {"count_of_products": False}
+    data = {"count_of_products": 'pl'}
     response = post(f'{SERVER}/get_one_product/{value_id}', json=data)
     print(response)
     print(post(f'{SERVER}/get_one_user/{current_user.id}', json={'basket': user['basket']}).json())
