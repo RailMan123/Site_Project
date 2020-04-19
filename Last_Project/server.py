@@ -297,12 +297,12 @@ def show_basket_of_user():
         for i in range(len(list_of_items)):
             if list_of_items[i] != '':
                 listt = list(map(int, list_of_items[i].split(', ')))
-                intermid = get(f'{SERVER}/get_one_product/{listt[0]}').json()
+                intermid = get(f'{SERVER}/get_one_product/{listt[0]}')
                 if not intermid:
                     rip = rip.split("#" + ", ".join(map(str, listt)))
                     rip = "".join(rip)
                     continue
-                listt[0] = intermid['product']
+                listt[0] = intermid.json()['product']
                 new_list_of_items.append(listt)
         user['basket'] = rip
         print(post(f'{SERVER}/get_one_user/{current_user.id}', json={'basket': user['basket']}).json())
