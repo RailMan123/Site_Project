@@ -6,6 +6,7 @@ import datetime
 from flask import Flask, render_template, request
 from flask_login import LoginManager, login_user, current_user, logout_user, \
     login_required
+from flask_ngrok import run_with_ngrok
 from flask_restful import Api
 from flask_wtf import FlaskForm
 from requests import post, get
@@ -23,12 +24,13 @@ from API_FILES.products_api import ProductsListResource, ProductsResource, Produ
 from API_FILES.user_api import UserResource, UserDeleteResource, UsersListResource
 from API_FILES.reviews_api import ReviewsResource, ReviewsListResource, ReviewsDeleteResource
 
+# Начало работы
 app = Flask(__name__)
 app.config['PERMANENT_SESSION_LIFETIME'] = datetime.timedelta(days=365)
 app.config['SECRET_KEY'] = 'very_secret_key'
 login_manager = LoginManager()
 login_manager.init_app(app)
-# logging.basicConfig(level=logging.INFO)
+logging.basicConfig(level=logging.INFO)
 api = Api(app)
 SERVER = 'http://localhost:5000'
 DISCOUNT_WORDS = ['sale', 'discount', 'распродажа', 'скид', 'акция', 'дисконт']
@@ -36,6 +38,7 @@ MALE_WORDS = ['male', 'муж']
 FEMALE_WORDS = ['female', 'жен']
 
 
+# Функция поиска предметов в форме form_of_search
 def search_product(text):
     try:
         if text.isdigit():
@@ -91,6 +94,7 @@ def search_product(text):
         return redirect('/')
 
 
+# Функция подсчитывающая количество товаров в корзине
 def how_much_items_in_basket():
     try:
         if current_user:
@@ -113,12 +117,14 @@ def how_much_items_in_basket():
         return 0
 
 
+# запомнили пользователя
 @login_manager.user_loader
 def load_user(user_id):
     session = db_session.create_session()
     return session.query(User).get(user_id)
 
 
+# Выход пользователя
 @app.route('/logout')
 @login_required
 def logout():
@@ -126,11 +132,13 @@ def logout():
     return redirect("/")
 
 
+# Форма поиска предмета
 class SearchItemForm(FlaskForm):
     search_item = StringField(validators=[DataRequired()])
     submit_of_search = SubmitField('')
 
 
+# Главная страница
 @app.route("/", methods=["GET", "POST"])
 def main_page():
     form_of_search = SearchItemForm()
@@ -148,6 +156,7 @@ def main_page():
                            how_much_items_in_basket=how_much_items_in_basket())
 
 
+# Скидки, сортировка
 @app.route("/discounts", methods=["GET", "POST"])
 def discounts_page():
     form_of_search = SearchItemForm()
@@ -170,6 +179,7 @@ def discounts_page():
                            how_much_items_in_basket=how_much_items_in_basket())
 
 
+# Мужское, сортировка
 @app.route("/formales", methods=["GET", "POST"])
 def male_page():
     form_of_search = SearchItemForm()
@@ -192,6 +202,7 @@ def male_page():
                            how_much_items_in_basket=how_much_items_in_basket())
 
 
+# Женское, сортировка
 @app.route("/forfemales", methods=["GET", "POST"])
 def female_page():
     form_of_search = SearchItemForm()
@@ -214,6 +225,7 @@ def female_page():
                            how_much_items_in_basket=how_much_items_in_basket())
 
 
+# Форма добавления пользователем продукта в свою карзину
 class ProductForm(FlaskForm):
     submit = SubmitField('Submit')
     example = RadioField('Label',
@@ -221,6 +233,7 @@ class ProductForm(FlaskForm):
                                   ('44', '44')])
 
 
+# Отдельный продукт
 @app.route('/product/<int:value>', methods=["GET", "POST"])
 def show_product(value):
     connect = db_session.create_session()
@@ -258,6 +271,7 @@ def show_product(value):
                            how_much_items_in_basket=how_much_items_in_basket(), error_message=error_message)
 
 
+# Ошибка 404
 @app.errorhandler(404)
 def not_found(error):
     form_of_search = SearchItemForm()
@@ -265,6 +279,7 @@ def not_found(error):
     return render_template('errors_page.html', img_src_of_error=img_src, form_of_search=form_of_search)
 
 
+# Ошибка 500
 @app.errorhandler(500)
 def not_found(error):
     form_of_search = SearchItemForm()
@@ -272,6 +287,7 @@ def not_found(error):
     return render_template('errors_page.html', img_src_of_error=img_src, form_of_search=form_of_search)
 
 
+# Форма регистрации пользователя
 class RegisterForm(FlaskForm):
     email = EmailField('Login / email', validators=[DataRequired()])
     password = PasswordField('Password', validators=[DataRequired()])
@@ -280,6 +296,7 @@ class RegisterForm(FlaskForm):
     submit = SubmitField('Submit')
 
 
+# Переход в корзину пользователя
 @app.route('/basket', methods=["GET", "POST"])
 def show_basket_of_user():
     if not current_user.is_authenticated:
@@ -311,6 +328,7 @@ def show_basket_of_user():
                                how_much_items_in_basket=how_much_items_in_basket())
 
 
+# Регестрация пользователя
 @app.route('/register', methods=['GET', 'POST'])
 def reqister():
     form = RegisterForm()
@@ -336,12 +354,14 @@ def reqister():
     return render_template('register.html', title='Регистрация', form=form)
 
 
+# Форма фвторизации пользователя
 class LoginForm(FlaskForm):
     email = EmailField('Почта', validators=[DataRequired()])
     password = PasswordField('Пароль', validators=[DataRequired()])
     submit = SubmitField('Войти')
 
 
+# Авторизация пользователя
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     form = LoginForm()
@@ -359,6 +379,7 @@ def login():
     return render_template('login.html', title='Авторизация', form=form)
 
 
+# Удаление предмета из карзины
 @app.route('/basket_item_delete/<int:value_id>/<int:value_size>', methods=["GET", "POST"])
 @login_required
 def delete_item_from_basket(value_id, value_size):
@@ -370,11 +391,11 @@ def delete_item_from_basket(value_id, value_size):
     user['basket'] = rip
     data = {"count_of_products": 'pl'}
     response = post(f'{SERVER}/get_one_product/{value_id}', json=data)
-    print(response)
     print(post(f'{SERVER}/get_one_user/{current_user.id}', json={'basket': user['basket']}).json())
     return redirect('/basket')
 
 
+# Форма добавления продукта админом
 class AdminAddProduct(FlaskForm):
     name_of_product = StringField('Введите название продукта', validators=[DataRequired()])
     about_product = StringField('Введите информацию о продукте', validators=[DataRequired()])
@@ -387,6 +408,7 @@ class AdminAddProduct(FlaskForm):
     submit = SubmitField('Добавить')
 
 
+# Добавление продукта админом
 @app.route('/admin_add_product', methods=["GET", "POST"])
 @login_required
 def admin_add_product():
@@ -440,6 +462,7 @@ def admin_add_product():
                            title='AdminPanel', form=admin_form, message="")
 
 
+# Форма изменения существующего продукта админом
 class AdminEditProduct(FlaskForm):
     id = StringField('Введите id продукта', validators=[DataRequired()])
     name_of_product = StringField('Введите название продукта')
@@ -453,6 +476,7 @@ class AdminEditProduct(FlaskForm):
     submit = SubmitField('Изменить')
 
 
+# Изменение продукта админом
 @app.route('/admin_edit_product', methods=["GET", "POST"])
 @login_required
 def admin_edit_product():
@@ -531,11 +555,13 @@ def admin_edit_product():
                            title='AdminPanel', form=admin_form, message="")
 
 
+# Форма удаления продукта админом
 class AdminDeletProduct(FlaskForm):
     id = StringField('Введите id продукта', validators=[DataRequired()])
     submit = SubmitField('Удалить')
 
 
+# Удаление продукта админом
 @app.route('/admin_delete_product', methods=["GET", "POST"])
 @login_required
 def admin_delete_product():
@@ -566,11 +592,13 @@ def admin_delete_product():
                            title='AdminPanel', form=admin_form, message="")
 
 
+# Форма удаления пользователя админом
 class AdminDeletUser(FlaskForm):
     id = StringField('Введите id пользователя', validators=[DataRequired()])
     submit = SubmitField('Удалить')
 
 
+# Удаление пользователя
 @app.route('/admin_delete_user', methods=["GET", "POST"])
 @login_required
 def admin_delete_user():
@@ -602,11 +630,13 @@ def admin_delete_user():
                            title='AdminPanel', form=admin_form, message="")
 
 
+# Форма добавления отзыва
 class MakeReview(FlaskForm):
     review = TextAreaField(validators=[DataRequired()])
     submit = SubmitField('Опубликовать')
 
 
+# Отзывы
 @app.route('/reviews', methods=["GET", "POST"])
 def reviews():
     form_of_search = SearchItemForm()
@@ -658,6 +688,7 @@ def reviews():
                            message="", curent_admin=is_True_admin)
 
 
+# Удаление отзыва
 @app.route('/delete_one_review/<int:value>')
 def delete_reviews(value):
     r = post(f"{SERVER}/delete_one_review/{value}")
@@ -665,6 +696,7 @@ def delete_reviews(value):
 
 
 if __name__ == "__main__":
+    # Подключение базы данных, api и запуск приложения
     db_session.global_init('db/main_data_base.db')
     api.add_resource(ProductsListResource, '/main')
     api.add_resource(ProductsResource, f'/get_one_product/<int:value>')
