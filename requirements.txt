@@ -13,7 +13,7 @@ aniso8601==8.0.0
 certifi==2019.11.28
 cffi==1.14.0
 chardet==3.0.4
-cryptography==2.8
+cryptography==3.2
 decorator==4.4.2
 flask-ngrok==0.0.25
 future==0.18.2
