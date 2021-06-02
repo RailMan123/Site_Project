@@ -29,4 +29,4 @@ requests==2.23.0
 setuptools==39.0.1
 six==1.14.0
 tornado==6.0.4
-urllib3==1.25.8
+urllib3==1.26.5
